@@ -1,0 +1,52 @@
+.register-page {
+  --background: linear-gradient(180deg, #6a11cb, #2575fc);
+
+  .header {
+    text-align: center;
+    padding: 20px;
+
+    ion-img {
+      width: 100px;
+      height: 100px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #fff;
+      font-weight: bold;
+      margin: 10px 0 5px;
+    }
+
+    p {
+      color: #ddd;
+      font-size: 14px;
+    }
+  }
+
+  .form {
+    ion-item {
+      --background: transparent;
+      color: #fff;
+    }
+
+    ion-label {
+      color: #fff !important;
+    }
+
+    ion-input, ion-textarea {
+      color: #fff !important;
+      --placeholder-color: #bbb;
+    }
+  }
+
+  .btn-area {
+    padding: 20px;
+    ion-button {
+      --background: #ff5722;
+      --color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+  }
+}

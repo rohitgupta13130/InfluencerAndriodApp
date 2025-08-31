@@ -20,6 +20,9 @@ ion-content {
   width: 120px;
   height: 120px;
   margin-bottom: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
 .title {
@@ -35,6 +38,15 @@ ion-content {
   margin-bottom: 30px;
 }
 
+.input-item {
+  width: 80%;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  --background: white;
+  --padding-start: 10px;
+  --highlight-color-focused: #2575fc;
+}
+
 .login-btn {
   width: 80%;
   margin: 10px 0;
@@ -42,8 +54,70 @@ ion-content {
   font-weight: bold;
 }
 
+.primary-btn {
+  background: #ff9800; /* orange for primary login */
+  color: white;
+}
+
 .icon {
   width: 20px;
   height: 20px;
   margin-right: 10px;
 }
+
+.divider {
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+  width: 80%;
+  color: white;
+  font-weight: bold;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.5);
+}
+.divider span {
+  background: linear-gradient(to bottom, #6a11cb, #2575fc);
+  padding: 0 10px;
+}
+
+.input-item {
+  width: 80%;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  --background: white;
+  --padding-start: 10px;
+  --highlight-color-focused: #2575fc;
+}
+
+.primary-btn {
+  background: #ff9800;
+  color: white;
+}
+
+ion-item {
+  --background: transparent;
+  --color: black; /* text inside input */
+}
+
+ion-label {
+  color: white !important; /* label color */
+}
+
+ion-input {
+  color: black !important; /* user typed text */
+  --placeholder-color: #ddd; /* placeholder color */
+}
+
+ion-text {
+  color: white !important;
+}
+
+

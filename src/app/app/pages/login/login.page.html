@@ -6,14 +6,38 @@
     <h2 class="title">Influencers</h2>
     <p class="subtitle">Find Your Perfect Brand Partner</p>
 
+    <!-- Username -->
+    <ion-item class="input-item">
+      <ion-input placeholder="Username" type="text" [(ngModel)]="username" name="username"></ion-input>
+    </ion-item>
+
+    <!-- Password with eye toggle -->
+    <ion-item class="input-item">
+      <ion-input [type]="showPassword ? 'text' : 'password'" placeholder="Password" [(ngModel)]="password" name="password"></ion-input>
+      <ion-icon slot="end" [name]="showPassword ? 'eye-off' : 'eye'" (click)="togglePassword()"></ion-icon>
+    </ion-item>
+
+    <!-- Login Button -->
+    <ion-button expand="block" name="login" id="login-btn" class="login-btn primary-btn"  (click)="login()">
+      Login
+    </ion-button>
+    <ion-button expand="block" name="register" id="register-btn" class="login-btn" type="button" (click)="register()">
+      Register
+    </ion-button>
+
+    <!-- Divider -->
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
     <!-- Google Button -->
-    <ion-button expand="block" class="login-btn" color="light">
+    <ion-button expand="block" class="login-btn" color="light" (click)="loginWithGoogle()">
       <img src="assets/Google.png" class="icon" />
       Continue with Google
     </ion-button>
 
     <!-- Instagram Button -->
-    <ion-button expand="block" class="login-btn" color="light">
+    <ion-button expand="block" class="login-btn" color="light" (click)="loginWithInstagram()">
       <img src="assets/Instagram.png" class="icon" />
       Continue with Instagram
     </ion-button>

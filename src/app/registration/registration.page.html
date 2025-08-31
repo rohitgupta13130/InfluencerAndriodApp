@@ -1,0 +1,56 @@
+<ion-content [fullscreen]="true" class="register-page">
+
+  <div class="header">
+    <!-- <ion-img src="assets/influencer.png" alt="influencer"></ion-img> -->
+    <h2>Join as an Influencer</h2>
+    <p>Grow your reach and connect with brands 🚀</p>
+  </div>
+
+  <ion-list class="form">
+
+    <ion-item>
+      <ion-label position="floating">Full Name</ion-label>
+      <ion-input [(ngModel)]="influencer.fullName"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="influencer.email"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Username</ion-label>
+      <ion-input [(ngModel)]="influencer.username"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" [(ngModel)]="influencer.passwordHash"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Followers Count</ion-label>
+      <ion-input type="number" [(ngModel)]="influencer.followersCount"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Instagram / YouTube Link</ion-label>
+      <ion-input type="url" [(ngModel)]="influencer.platform"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Short Bio</ion-label>
+      <ion-textarea autoGrow="true" [(ngModel)]="influencer.socialhandle"></ion-textarea>
+    </ion-item>
+
+  </ion-list>
+
+  <div class="btn-area">
+    <ion-button expand="block" shape="round" (click)="registerInfluencer()">
+      Register Now
+    </ion-button>
+  </div>
+
+</ion-content>
+
+<pre>{{ influencer | json }}</pre>
