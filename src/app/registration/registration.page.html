@@ -10,37 +10,44 @@
 
     <ion-item>
       <ion-label position="floating">Full Name</ion-label>
-      <ion-input [(ngModel)]="influencer.fullName"></ion-input>
+      <ion-input [(ngModel)]="influencer.fullName"
+      placeholder="Enter Your FullName"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="influencer.email"></ion-input>
+      <ion-input type="email" [(ngModel)]="influencer.email"
+      placeholder="Enter Your Email Id"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Username</ion-label>
-      <ion-input [(ngModel)]="influencer.username"></ion-input>
+      <ion-input [(ngModel)]="influencer.username"
+      placeholder="Enter Your Username"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" [(ngModel)]="influencer.passwordHash"></ion-input>
+      <ion-input type="password" [(ngModel)]="influencer.passwordHash"
+      placeholder="Enter Your Password"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Followers Count</ion-label>
-      <ion-input type="number" [(ngModel)]="influencer.followersCount"></ion-input>
+      <ion-input type="number" [(ngModel)]="influencer.followersCount"
+      placeholder="Enter Your FollowersCount"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Instagram / YouTube Link</ion-label>
-      <ion-input type="url" [(ngModel)]="influencer.platform"></ion-input>
+      <ion-input type="url" [(ngModel)]="influencer.platform"
+      placeholder="Enter Your Instagram / Youtube Link"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Short Bio</ion-label>
-      <ion-textarea autoGrow="true" [(ngModel)]="influencer.socialhandle"></ion-textarea>
+      <ion-textarea autoGrow="true" [(ngModel)]="influencer.socialhandle"
+      placeholder="Short Bio"></ion-textarea>
     </ion-item>
 
   </ion-list>

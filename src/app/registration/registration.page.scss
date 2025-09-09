@@ -26,7 +26,7 @@
   .form {
     ion-item {
       --background: transparent;
-      color: #fff;
+      --color: #fff;
     }
 
     ion-label {
@@ -34,8 +34,9 @@
     }
 
     ion-input, ion-textarea {
-      color: #fff !important;
+      --color: #000000 !important;
       --placeholder-color: #bbb;
+      
     }
   }
 
