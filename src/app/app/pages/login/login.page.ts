@@ -20,7 +20,11 @@ export class LoginPage implements OnInit {
   username: string = '';
   password: string = '';
   showPassword: boolean = false;
-  constructor(private http: HttpClient,private router: Router) { }
+  errorMessage: string = '';
+  constructor(private http: HttpClient,private router: Router) 
+  {
+    addIcons({personCircleOutline, lockClosedOutline,logInOutline});
+   }
 
   ngOnInit() {
   }
@@ -37,6 +41,7 @@ export class LoginPage implements OnInit {
         localStorage.setItem('authToken', token);
         console.log('Bearer Token:', token);
         alert('Login Successful!');
+        this.router.navigateByUrl('/home', { replaceUrl: true });
       },
       error: (err) => {
         console.error('Login failed:', err);
