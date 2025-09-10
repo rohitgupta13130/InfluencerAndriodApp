@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonList, IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonImg } from '@ionic/angular/standalone';
+//import { IonContent, IonList, IonItem, IonLabel, IonInput, IonTextarea, IonButton, IonImg } from '@ionic/angular/standalone';
 import{ InfluencerRegistrationDto} from '../dto/influencer-registration.dto';
 import{HttpClient} from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
@@ -27,7 +27,7 @@ export class RegistrationPage implements OnInit {
 
     console.log('Registration DTO:', this.influencer);
 
-      this.http.post('http://localhost:3000/influencers/register', this.influencer, {
+      this.http.post('http://localhost:3000/influencer/register', this.influencer, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
       next: (response) => {
