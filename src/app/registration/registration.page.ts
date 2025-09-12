@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import{ InfluencerRegistrationDto} from '../dto/influencer-registration.dto';
 import{HttpClient} from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router'; 
+
 
 
 @Component({
@@ -18,7 +20,7 @@ export class RegistrationPage implements OnInit {
 
   influencer : InfluencerRegistrationDto= new InfluencerRegistrationDto();
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private router: Router) { }
 
   ngOnInit() {
   }
@@ -27,12 +29,13 @@ export class RegistrationPage implements OnInit {
 
     console.log('Registration DTO:', this.influencer);
 
-      this.http.post('http://localhost:3000/influencer/register', this.influencer, {
+      this.http.post('https://newbusinessapi.onrender.com/influencer/register', this.influencer, {
       headers: { 'Content-Type': 'application/json' }
     }).subscribe({
       next: (response) => {
         console.log('Registration success:', response);
         alert('Registration Successful!');
+        this.router.navigateByUrl('/login', { replaceUrl: true });
       },
       error: (err) => {
         console.error('Registration failed:', err);
@@ -41,5 +44,12 @@ export class RegistrationPage implements OnInit {
     });
 
   }
+
+  goToLogin() {
+  this.router.navigate(['/login']);
+}
+
+
+ 
 
 }
