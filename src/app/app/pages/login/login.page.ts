@@ -21,18 +21,32 @@ export class LoginPage implements OnInit {
   password: string = '';
   showPassword: boolean = false;
   errorMessage: string = '';
+  logoUrl: string = '';
+
   constructor(private http: HttpClient,private router: Router) 
   {
     addIcons({personCircleOutline, lockClosedOutline,logInOutline});
    }
 
   ngOnInit() {
-  }
+  // ✅ Backend se logo fetch
+  this.http.get<{ logoUrl: string }>('http://localhost:1000/logo')
+    .subscribe({
+      next: (res) => {
+        this.logoUrl = res.logoUrl; // 👈 backend JSON key
+      },
+      error: (err) => {
+        console.error('Logo fetch failed', err);
+        this.logoUrl = 'assets/logo.jpeg'; // fallback
+      }
+    });
+}
+
 
     login() {
        const body = {username: this.username,password: this.password};
        console.log(this.username + '' + this.password );
-       this.http.post<any>('https://newbusinessapi.onrender.com/auth/login', body, {
+       this.http.post<any>('http://localhost:1000/auth/login', body, {
       headers: { 'Content-Type': 'application/json' }
     })
     .subscribe({
@@ -59,7 +73,8 @@ export class LoginPage implements OnInit {
   }
 
     loginWithInstagram() {
-    alert('Instagram Login Clicked');
+    //alert('Instagram Login Clicked');
+    window.location.href = 'http://localhost:1000/instagram/login';
   }
 
   loginClick() {
