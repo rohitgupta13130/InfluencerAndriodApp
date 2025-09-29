@@ -29,7 +29,7 @@ export class LoginPage implements OnInit {
    }
 
   ngOnInit() {
-  // ✅ Backend se logo fetch
+  
   this.http.get<{ logoUrl: string }>('http://localhost:1000/logo')
     .subscribe({
       next: (res) => {

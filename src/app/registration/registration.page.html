@@ -49,6 +49,19 @@
       <ion-textarea autoGrow="true" [(ngModel)]="influencer.bio"
       placeholder="Short Bio"></ion-textarea>
     </ion-item>
+    
+    <!-- profile pic input + preview (passport style handled via CSS if needed) -->
+    <ion-item>
+      <ion-label>Profile Picture</ion-label>
+      <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+    </ion-item>
+
+    <ion-item *ngIf="previewUrl" lines="none">
+      <div class="passport-preview">
+        <img [src]="previewUrl" alt="Preview" />
+      </div>
+      <ion-button fill="clear" size="small" (click)="removeSelectedFile()">Remove</ion-button>
+    </ion-item>
 
   </ion-list>
 
