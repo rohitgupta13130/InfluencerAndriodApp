@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Influencers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content">
+  <ion-list *ngIf="influencers$ | async as list; else loading">
+    <ion-card *ngFor="let inf of list" class="influencer-card">
+      <div class="row">
+        <div class="thumb">
+          <img
+            [src]="inf.profilePicUrl ? (baseUrl + inf.profilePicUrl) : 'assets/default-avatar.png'"
+            [alt]="inf.fullName || 'influencer avatar'"
+            (error)="$event.target.src = 'assets/default-avatar.png'"
+          />
+        </div>
+
+        <div class="meta">
+          <h2 class="name">Name: <span>{{ inf.fullName || '—' }}</span></h2>
+          <p class="email">Email: <span>{{ inf.email || '—' }}</span></p>
+          <p class="username">Username: <span>@{{ inf.username || '—' }}</span></p>
+          <p class="bio">Bio: <span>{{ inf.bio || '—' }}</span></p>
+          <p class="followers">Followers: <span>{{ inf.followersCount ? (inf.followersCount | number) : '0' }}</span></p>
+          <p class="category">Category: <span>{{ inf.category || '—' }}</span></p>
+          <p class="platform">Platform: <span>{{ inf.platform || '—' }}</span></p>
+        </div>
+      </div>
+    </ion-card>
+  </ion-list>
+
+  <ng-template #loading>
+    <div class="loading">Loading influencers…</div>
+  </ng-template>
+</ion-content>

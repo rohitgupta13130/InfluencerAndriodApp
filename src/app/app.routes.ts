@@ -18,6 +18,13 @@ export const routes: Routes = [
     path: 'registration',
     loadComponent: () => import('./registration/registration.page').then( m => m.RegistrationPage)
   },
+
+  // example snippet inside your existing routes array
+{
+    path: 'influencers',
+    loadComponent: () => import('./app/pages/influencers/influencer.page').then(m => m.InfluencersPage),
+  },
+
  
 
 ];

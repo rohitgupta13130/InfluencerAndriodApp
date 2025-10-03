@@ -25,11 +25,35 @@
       <ion-input [(ngModel)]="influencer.username"
       placeholder="Enter Your Username"></ion-input>
     </ion-item>
-
-    <ion-item>
+  <ion-item>
       <ion-label position="floating">Password</ion-label>
       <ion-input type="password" [(ngModel)]="influencer.passwordHash"
       placeholder="Enter Your Password"></ion-input>
+  </ion-item>
+
+  <ion-item>
+      <ion-label position="floating">Short Bio</ion-label>
+      <ion-textarea autoGrow="true" [(ngModel)]="influencer.bio"
+      placeholder="Short Bio"></ion-textarea>
+  </ion-item>
+
+  <!-- profile pic input + preview (passport style handled via CSS if needed) -->
+    <ion-item>
+        <ion-label>Profile Picture</ion-label>
+        <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+      </ion-item>
+
+      <ion-item *ngIf="previewUrl" lines="none">
+        <div class="passport-preview">
+          <img [src]="previewUrl" alt="Preview" />
+        </div>
+        <ion-button fill="clear" size="small" (click)="removeSelectedFile()">Remove</ion-button>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Category</ion-label>
+      <ion-input type="" [(ngModel)]="influencer.category"
+      placeholder="Enter your category"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -44,24 +68,9 @@
       placeholder="Enter Your Instagram / Youtube Link"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Short Bio</ion-label>
-      <ion-textarea autoGrow="true" [(ngModel)]="influencer.bio"
-      placeholder="Short Bio"></ion-textarea>
-    </ion-item>
+ 
     
-    <!-- profile pic input + preview (passport style handled via CSS if needed) -->
-    <ion-item>
-      <ion-label>Profile Picture</ion-label>
-      <input type="file" accept="image/*" (change)="onFileSelected($event)" />
-    </ion-item>
-
-    <ion-item *ngIf="previewUrl" lines="none">
-      <div class="passport-preview">
-        <img [src]="previewUrl" alt="Preview" />
-      </div>
-      <ion-button fill="clear" size="small" (click)="removeSelectedFile()">Remove</ion-button>
-    </ion-item>
+    
 
   </ion-list>
 
