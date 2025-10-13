@@ -1,0 +1,93 @@
+<!-- src/app/pages/dashboard/dashboard.page.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Logout</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ng-container *ngIf="data$ | async as data">
+    <ion-card>
+      <ion-item lines="none">
+        <ion-avatar slot="start">
+          <img [src]="data.profile.profilePicUrl || 'assets/user3.png'" />
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ data.profile.fullName }}</h2>
+          <p>{{ data.profile.username }} • {{ data.profile.platform }}</p>
+          <small>{{ data.profile.email }}</small>
+        </ion-label>
+      </ion-item>
+      <ion-card-content>
+        <p class="category">{{ data.profile.category }}</p>
+        <p class="handle">{{ data.profile.bio }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4">
+          <ion-card>
+            <ion-card-content class="stat">
+              <div class="value">{{ data.stats.followers }}</div>
+              <div class="label">Followers</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="4">
+          <ion-card>
+            <ion-card-content class="stat">
+              <div class="value">{{ data.stats.engagementRate | number:'1.1-2' }}%</div>
+              <div class="label">Engagement</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="4">
+          <ion-card>
+            <ion-card-content class="stat">
+              <div class="value">{{ data.stats.totalCampaigns }}</div>
+              <div class="label">Campaigns</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Last 7 Days — New Followers</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="bar-row">
+          <div *ngFor="let n of data.stats.newFollowersLast7Days; let i = index" class="bar-cell">
+            <div class="bar" [style.height.%]="Math.min(100, n * 8)">{{ n }}</div>
+            <div class="bar-label">D{{ i + 1 }}</div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Recent Activities</ion-card-title>
+      </ion-card-header>
+      <ion-list>
+        <ion-item *ngFor="let a of data.recentActivities">
+          <ion-label>
+            <h3>{{ a.action }}</h3>
+            <p>{{ a.date | date:'short' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+  </ng-container>
+</ion-content>

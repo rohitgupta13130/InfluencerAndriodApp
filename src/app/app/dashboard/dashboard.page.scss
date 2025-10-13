@@ -1,0 +1,86 @@
+/* src/app/pages/dashboard/dashboard.page.scss */
+ion-card img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.stat .value {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.stat .label {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  text-align: center;
+}
+
+.bar-row {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  padding: 12px 0;
+}
+.bar-cell {
+  width: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bar {
+  width: 100%;
+  background: var(--ion-color-primary-tint);
+  color: white;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding: 4px 0;
+  border-radius: 4px 4px 0 0;
+}
+.bar-label {
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+ion-avatar {
+  width: 56px;           /* change size if you want bigger avatar */
+  height: 56px;
+  min-width: 56px;       /* ensures slot sizing in ion-item */
+  border-radius: 50%;
+  overflow: hidden;      /* important: crop the image to the circle */
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* Ensure the image fills the container and is cropped center */
+ion-avatar img,
+ion-card img {
+  width: 100%;           /* fill the avatar container */
+  height: 100%;
+  display: block;        /* remove whitespace below image */
+  object-fit: cover;     /* crop to fill while keeping aspect ratio */
+  border-radius: 50%;    /* in case some browsers render img outside avatar */
+}
+
+/* Optional: larger avatar on desktop - adjust with media query */
+@media (min-width: 768px) {
+  ion-avatar {
+    width: 72px;
+    height: 72px;
+    min-width: 72px;
+  }
+}
+
+/* keep existing stat/card styles below */
+.stat .value {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+.stat .label {
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  text-align: center;
+}

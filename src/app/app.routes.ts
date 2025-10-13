@@ -25,6 +25,10 @@ export const routes: Routes = [
     loadComponent: () => import('./app/pages/influencers/influencer.page').then(m => m.InfluencersPage),
   },
 
- 
+ {
+  path: 'dashboard',
+  loadComponent: () => import('./app/dashboard/dashboard.page').then(m => m.DashboardPage)
+}
+
 
 ];
