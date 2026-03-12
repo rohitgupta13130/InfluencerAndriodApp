@@ -1,0 +1,7 @@
+{
+  "name": "influencer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
