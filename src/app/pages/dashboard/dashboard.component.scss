@@ -1,0 +1,35 @@
+/* Navbar */
+.nav-bar {
+  --background: linear-gradient(90deg, #5c54ff, #ff4fa0);
+  color: white;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Logout Button */
+.logout-btn {
+  color: white;
+  font-weight: 500;
+}
+
+/* Hide text on mobile */
+.logout-text {
+  margin-left: 5px;
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+  .logout-text {
+    display: none; /* only icon on mobile */
+  }
+}
+
+/* Content */
+.dashboard-content {
+  text-align: center;
+  margin-top: 20px;
+}

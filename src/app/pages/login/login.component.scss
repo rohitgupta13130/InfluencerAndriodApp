@@ -1,0 +1,161 @@
+.login-bg{
+  --background: linear-gradient(135deg,#7b5cff,#ff5fa2);
+}
+
+/* Center container */
+.login-container{
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+/* Card */
+.login-card{
+  background:#ffffff;
+  padding:40px;
+  border-radius:25px;
+
+  width:100%;
+  max-width:420px;
+
+  box-shadow:0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* Logo area */
+.logo-area{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.brand{
+  font-size:28px;
+  font-weight:700;
+}
+
+.blue{
+  color:#5c54ff;
+}
+
+.pink{
+  color:#ff4fa0;
+}
+
+.logo-area p{
+  color:#777;
+}
+
+/* Input */
+.input-box{
+  margin-top:12px;
+  --border-radius:10px;
+}
+
+/* Forgot */
+.forgot{
+  text-align:right;
+  font-size:14px;
+  margin-top:5px;
+}
+
+/* Login button */
+.login-btn{
+  margin-top:20px;
+  height:48px;
+  font-weight:600;
+
+  --background:linear-gradient(90deg,#5c54ff,#ff4fa0);
+}
+
+/* Divider */
+.divider{
+  text-align:center;
+  margin:20px 0;
+  color:#999;
+}
+
+.google-btn{
+  margin-top:10px;
+  --background:#ffffff;
+  --color:#444;
+
+  --border-color:#ddd;
+  --border-style:solid;
+  --border-width:1px;
+
+  height:48px;
+  font-weight:500;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.google-icon{
+  width:20px;
+  height:20px;
+  margin-right:10px;
+}
+
+/* Facebook */
+.facebook-btn{
+  margin-top:10px;
+  height:48px;
+  --background:#3b5998;
+}
+
+/* Signup */
+.signup{
+  text-align:center;
+  margin-top:20px;
+}
+
+/* Error Message */
+.error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.success{
+  color: #28a745;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+
+/* Improve input spacing */
+.input-box {
+  margin-top: 15px;
+  --border-radius: 10px;
+}
+
+/* Better button feel */
+.login-btn {
+  margin-top: 25px;
+  height: 50px;
+  font-weight: 600;
+}
+/* Responsive */
+
+@media (min-width:768px){
+
+  .login-card{
+    max-width:480px;
+    padding:50px;
+  }
+
+}
+
+@media (min-width:1200px){
+
+  .login-card{
+    max-width:520px;
+  }
+
+}

@@ -1,0 +1,98 @@
+<ion-content fullscreen="true" class="login-bg">
+
+  <div class="login-container">
+    <div class="login-card">
+
+      <div class="logo-area">
+        <h1 class="brand">
+          <span class="blue">Influencer</span>
+          <span class="pink">Connect</span>
+        </h1>
+
+        <h2>Create Account</h2>
+        <p>Join our platform</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+        <!-- Name -->
+        <ion-item class="input-box">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Full Name" formControlName="name"></ion-input>
+        </ion-item>
+
+        <!-- Name Error -->
+        <p class="error" *ngIf="f['name'].touched && f['name'].errors">
+          <span *ngIf="f['name'].errors['required']">Name is required</span>
+          <span *ngIf="f['name'].errors['minlength']">Minimum 3 characters</span>
+        </p>
+
+        <!-- Email -->
+        <ion-item class="input-box">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Email" formControlName="email"></ion-input>
+        </ion-item>
+
+        <!-- Email Error -->
+        <p class="error" *ngIf="f['email'].touched && f['email'].errors">
+          <span *ngIf="f['email'].errors['required']">Email is required</span>
+          <span *ngIf="f['email'].errors['email']">Invalid email</span>
+        </p>
+
+        <!-- Phone -->
+        <ion-item class="input-box">
+          <ion-icon name="call-outline" slot="start"></ion-icon>
+          <ion-input placeholder="Phone" formControlName="phone"></ion-input>
+        </ion-item>
+
+        <!-- Phone Error -->
+        <p class="error" *ngIf="f['phone'].touched && f['phone'].errors">
+          <span *ngIf="f['phone'].errors['required']">Phone is required</span>
+          <span *ngIf="f['phone'].errors['pattern']">Enter valid 10-digit number</span>
+        </p>
+
+        <!-- Password -->
+        <ion-item class="input-box">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+        </ion-item>
+
+        <!-- Password Error -->
+        <p class="error" *ngIf="f['password'].touched && f['password'].errors">
+          <span *ngIf="f['password'].errors['required']">Password is required</span>
+          <span *ngIf="f['password'].errors['minlength']">Minimum 6 characters</span>
+        </p>
+
+        <!-- API Error -->
+        <p class="error" *ngIf="registerError">
+          {{ registerError }}
+        </p>
+
+        <!-- Button -->
+        <ion-button
+          expand="block"
+          class="login-btn"
+          type="submit"
+          [disabled]="registerForm.invalid || isSubmitting">
+
+          {{ isSubmitting ? 'Registering...' : 'Register' }}
+        </ion-button>
+
+        <!-- Success -->
+        <p class="success" *ngIf="registerSuccess">
+          Registration Successful
+        </p>
+
+        <div class="signup">
+          <p>Already have account?</p>
+          <ion-button fill="clear" (click)="gotoLogin()">
+            Login
+          </ion-button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</ion-content>
