@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private baseUrl = 'https://internify-latest.onrender.com/api/User';
+  private baseUrl = 'https://influencerapi-09to.onrender.com/api/User';
 
   constructor(private http: HttpClient) {}
 

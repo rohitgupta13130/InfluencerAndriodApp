@@ -94,6 +94,11 @@ export class LoginComponent {
         if (res?.token) {
           localStorage.setItem('token', res.token);
           localStorage.setItem('isLoggedIn', 'true');
+
+          // ✅ Store extra data
+          localStorage.setItem('userName', res.userName);
+          localStorage.setItem('userId', res.userId);
+          localStorage.setItem('userType', res.userType);
         }
 
         // Navigate safely

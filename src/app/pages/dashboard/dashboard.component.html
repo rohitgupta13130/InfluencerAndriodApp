@@ -1,23 +1,17 @@
-<!-- Top Navigation -->
 <ion-header>
   <ion-toolbar class="nav-bar">
 
-    <!-- Left -->
     <ion-buttons slot="start">
-      <ion-button class="menu-btn">
+      <ion-button>
         <ion-icon name="menu-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
 
-    <!-- Center -->
-    <ion-title class="title">
-      Influencer Connect
-    </ion-title>
+    <ion-title>Influencer Connect</ion-title>
 
-    <!-- Right -->
     <ion-buttons slot="end">
-      <ion-button class="logout-btn" (click)="logout()">
-        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
         <span class="logout-text">Logout</span>
       </ion-button>
     </ion-buttons>
@@ -25,10 +19,101 @@
   </ion-toolbar>
 </ion-header>
 
-<!-- Content -->
-<ion-content class="ion-padding dashboard-content">
+<ion-content class="dashboard">
 
-  <h2>Welcome to Dashboard </h2>
-  <p>You are successfully logged in.</p>
+  <!-- Welcome -->
+  <div class="welcome">
+    <img src="https://i.pravatar.cc/100" />
+    <div>
+      <h2>Welcome Back, {{ userName }} 👋</h2>
+      <p>Your Performance Overview</p>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="cards">
+
+    <div class="card gradient1">
+      <h4>Earnings</h4>
+      <h2>$2,450</h2>
+      <p>This Month</p>
+    </div>
+
+    <div class="card gradient2">
+      <h4>Followers</h4>
+      <h2>120K</h2>
+      <p>+3,200</p>
+    </div>
+
+    <div class="card gradient3">
+      <h4>Campaigns</h4>
+      <h2>8 Active</h2>
+      <p>Ongoing</p>
+    </div>
+
+    <div class="card gradient4">
+      <h4>Engagement</h4>
+      <h2>8.4%</h2>
+      <p>Avg Rate</p>
+    </div>
+
+  </div>
+
+  <!-- Analytics -->
+  <div class="analytics">
+    <h3>Analytics</h3>
+
+    <img src="https://picsum.photos/600/200" class="chart"/>
+
+    <div class="stats">
+      <div>
+        <h3>150K</h3>
+        <p>Reach</p>
+      </div>
+      <div>
+        <h3>18K</h3>
+        <p>Likes</p>
+      </div>
+      <div>
+        <h3>3,200</h3>
+        <p>Comments</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaigns + Brands -->
+  <div class="bottom-section">
+
+    <div class="campaigns">
+      <h3>Active Campaigns</h3>
+
+      <div class="campaign-card">
+        <img src="https://picsum.photos/100/100?random=1" />
+        <div>
+          <h4>FitLife Promo</h4>
+          <p>Due: Aug 12</p>
+        </div>
+      </div>
+
+      <div class="campaign-card">
+        <img src="https://picsum.photos/100/100?random=2" />
+        <div>
+          <h4>GlamWear Collab</h4>
+          <p>Due: Aug 20</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="brands">
+      <h3>Top Brands</h3>
+      <div class="brand-logos">
+        <img src="https://picsum.photos/80?random=3" />
+        <img src="https://picsum.photos/80?random=4" />
+        <img src="https://picsum.photos/80?random=5" />
+      </div>
+    </div>
+
+  </div>
 
 </ion-content>
