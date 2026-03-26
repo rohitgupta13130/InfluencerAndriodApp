@@ -30,35 +30,40 @@
     </div>
   </div>
 
+ <!-- Loader -->
+  <div *ngIf="isLoading">
+    Loading dashboard...
+  </div>
+
   <!-- Cards -->
-  <div class="cards">
+  <div class="cards" *ngIf="dashboardData">
 
     <div class="card gradient1">
       <h4>Earnings</h4>
-      <h2>$2,450</h2>
-      <p>This Month</p>
+      <h2>₹{{ dashboardData?.earning }}</h2>
+      <p>Total</p>
     </div>
 
     <div class="card gradient2">
       <h4>Followers</h4>
-      <h2>120K</h2>
-      <p>+3,200</p>
+      <h2>{{ formatNumber(dashboardData?.followers) }}</h2>
+      <p>Growth</p>
     </div>
 
     <div class="card gradient3">
-      <h4>Campaigns</h4>
-      <h2>8 Active</h2>
-      <p>Ongoing</p>
+      <h4>Campaign</h4>
+      <h2>{{ dashboardData?.campaign }}</h2>
+      <p>Active</p>
     </div>
 
     <div class="card gradient4">
       <h4>Engagement</h4>
-      <h2>8.4%</h2>
-      <p>Avg Rate</p>
+      <h2>{{ dashboardData?.engagement }}</h2>
+      <p>Status</p>
     </div>
 
   </div>
-
+  
   <!-- Analytics -->
   <div class="analytics">
     <h3>Analytics</h3>
