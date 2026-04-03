@@ -7,14 +7,15 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private baseUrl = 'https://influencerapi-09to.onrender.com/api/User';
+  //private baseUrl = 'https://localhost:7117/api/User';
+  private baseUrl = 'https://influencerapi-09to.onrender.com/api/user';
 
   constructor(private http: HttpClient) {}
 
   register(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, data);
   }
-
+   
   login(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/login`, data);
   }

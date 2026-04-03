@@ -90,9 +90,11 @@ export class LoginComponent {
 
         this.isSubmitting = false;
 
+        //console.log("Login Response:", res) //Debug
+
         // Save token
-        if (res?.token) {
-          localStorage.setItem('token', res.token);
+        if (res) {
+         // localStorage.setItem('token', res.token);
           localStorage.setItem('isLoggedIn', 'true');
 
           // ✅ Store extra data

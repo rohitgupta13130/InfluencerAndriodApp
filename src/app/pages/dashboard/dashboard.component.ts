@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit {
   userName: string = '';
   dashboardData: any;
   isLoading: boolean = true;
+  
 
   constructor(
     private router: Router,
@@ -58,7 +59,7 @@ export class DashboardComponent implements OnInit {
   loadDashboard() {
     this.dashboardService.getDashboard().subscribe({
       next: (res) => {
-        console.log('Dashboard API:', res);
+        //console.log('Dashboard API:', res);
         this.dashboardData = res;
         this.isLoading = false;
       },

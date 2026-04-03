@@ -7,18 +7,28 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
 
-  private baseUrl = 'https://influencerapi-09to.onrender.com/api/Dashboard';
+  //private baseUrl = 'https://localhost:7117/api/Dashboard';
+  private baseUrl = 'https://influencerapi-09to.onrender.com/api/dashboard';
 
   constructor(private http: HttpClient) {}
 
+  // getDashboard(): Observable<any> {
+
+  //   const token = localStorage.getItem('token');
+
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${token}`
+  //   });
+
+  //   return this.http.get(this.baseUrl, { headers });
+  // }
+
   getDashboard(): Observable<any> {
-
-    const token = localStorage.getItem('token');
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    return this.http.get(this.baseUrl, { headers });
-  }
+  return this.http.get(
+    this.baseUrl,
+    {
+      withCredentials: true // 🔥 MOST IMPORTANT
+    }
+  );
+}
 }
