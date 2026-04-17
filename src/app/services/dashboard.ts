@@ -7,8 +7,10 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
 
-  //private baseUrl = 'https://localhost:7117/api/Dashboard';
-  private baseUrl = 'https://influencerapi-09to.onrender.com/api/dashboard';
+   // private baseUrl = 'https://localhost:7117/api/Dashboard';
+   // private userUrl = 'https://localhost:7117/api/user'; 
+    private userUrl = 'https://influencerapi-09to.onrender.com/api/user'
+    private baseUrl = 'https://influencerapi-09to.onrender.com/api/dashboard';
 
   constructor(private http: HttpClient) {}
 
@@ -31,4 +33,12 @@ export class DashboardService {
     }
   );
 }
+
+  getUsers(): Observable<any[]> {
+  return this.http.get<any[]>(
+    //'https://localhost:7117/api/User/GetAllUsers'
+    'https://influencerapi-09to.onrender.com/api/User/GetAllUsers'
+  );
+}
+
 }

@@ -23,4 +23,12 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full',
   },
+  {
+    
+  path: 'chat/:id',
+  loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage),
+  canActivate: [authGuard] // optional but recommended
+  }
+  
+
 ];

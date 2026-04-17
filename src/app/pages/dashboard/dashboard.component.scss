@@ -148,6 +148,31 @@
   }
 }
 
+// .chat-fab {
+//   --background: linear-gradient(135deg, #667eea, #764ba2);
+//   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+// }
+
+.chat-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
+  z-index: 1000;
+}
+
+.chat-list {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 260px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 /* Hide logout text on small */
 @media (max-width: 576px) {
   .logout-text {

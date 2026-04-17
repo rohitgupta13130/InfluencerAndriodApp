@@ -60,7 +60,8 @@ export class RegisterComponent {
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      userTypeId: [1, Validators.required] // ✅ NEW (default User)
     });
   }
 
@@ -82,7 +83,8 @@ export class RegisterComponent {
       fullName: this.f['name'].value.trim(),
       email: this.f['email'].value.trim(),
       phoneNumber: this.f['phone'].value.trim(),
-      password: this.f['password'].value.trim()
+      password: this.f['password'].value.trim(),
+      userTypeId: this.f['userTypeId'].value
     };
 
     this.authService.register(payload).subscribe({

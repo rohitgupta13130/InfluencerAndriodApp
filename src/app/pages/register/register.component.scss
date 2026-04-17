@@ -80,6 +80,14 @@
   font-weight:600;
 }
 
+.custom-select {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: transparent;
+}
+
 /* Responsive */
 @media (min-width:768px){
   .login-card{
@@ -93,3 +101,4 @@
     max-width:520px;
   }
 }
+

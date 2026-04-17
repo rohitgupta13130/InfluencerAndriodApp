@@ -70,63 +70,59 @@ export class LoginComponent {
     return this.loginForm.controls;
   }
 
-  login() {
+ login() {
 
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      return;
-    }
-
-    this.isSubmitting = true;
-    this.loginError = '';
-
-    const payload = {
-      username: this.loginForm.value.username.trim(),
-      password: this.loginForm.value.password.trim()
-    };
-
-    this.authService.login(payload).subscribe({
-      next: (res: any) => {
-
-        this.isSubmitting = false;
-
-        //console.log("Login Response:", res) //Debug
-
-        // Save token
-        if (res) {
-         // localStorage.setItem('token', res.token);
-          localStorage.setItem('isLoggedIn', 'true');
-
-          // ✅ Store extra data
-          localStorage.setItem('userName', res.userName);
-          localStorage.setItem('userId', res.userId);
-          localStorage.setItem('userType', res.userType);
-        }
-
-        // Navigate safely
-        this.router.navigate(['/dashboard'], { replaceUrl: true });
-      },
-
-      error: (err) => {
-
-        this.isSubmitting = false;
-
-        // Better error handling
-        if (err?.error?.errors) {
-          const errors = err.error.errors;
-          this.loginError = Object.keys(errors)
-            .map(key => errors[key].join(', '))
-            .join(', ');
-        } else {
-          this.loginError =
-            err?.error?.message ||
-            err?.message ||
-            'Invalid username or password';
-        }
-      }
-    });
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
   }
 
+  this.isSubmitting = true;
+  this.loginError = '';
+
+  const payload = {
+    username: this.loginForm.value.username.trim(),
+    password: this.loginForm.value.password.trim()
+  };
+
+  this.authService.login(payload).subscribe({
+    next: (res: any) => {
+
+      this.isSubmitting = false;
+
+      console.log("Login Response:", res); // 🔍 DEBUG
+
+      // 🔥 FIX 1: SAVE TOKEN
+      localStorage.setItem('token', res.token);
+
+      // ✅ store other data
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userName', res.userName);
+      localStorage.setItem('userId', res.userId);
+      localStorage.setItem('userType', res.userType);
+
+      // 🔥 FIX 2: SINGLE NAVIGATION
+      this.router.navigate(['/dashboard'], { replaceUrl: true });
+    },
+
+    error: (err) => {
+
+      this.isSubmitting = false;
+
+      if (err?.error?.errors) {
+        const errors = err.error.errors;
+        this.loginError = Object.keys(errors)
+          .map(key => errors[key].join(', '))
+          .join(', ');
+      } else {
+        this.loginError =
+          err?.error?.message ||
+          err?.message ||
+          'Invalid username or password';
+      }
+    }
+  });
+}
   togglePassword() {
     this.showPassword = !this.showPassword;
   }

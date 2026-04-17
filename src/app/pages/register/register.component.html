@@ -62,7 +62,23 @@
           <span *ngIf="f['password'].errors['required']">Password is required</span>
           <span *ngIf="f['password'].errors['minlength']">Minimum 6 characters</span>
         </p>
+                
+        <!-- User Type -->
+        <ion-item class="input-box">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
 
+          <select formControlName="userTypeId" class="custom-select">
+            <option [value]="1">User</option>
+            <option [value]="3">Influencer</option>
+            <!--  Avoid Admin in UI -->
+          </select>
+        </ion-item>
+
+        <!-- Error -->
+        <p class="error" *ngIf="f['userTypeId'].touched && f['userTypeId'].errors">
+          Please select user type
+        </p>
+        
         <!-- API Error -->
         <p class="error" *ngIf="registerError">
           {{ registerError }}

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../services/dashboard';
 import { CommonModule } from '@angular/common';
+import { chatbubbleEllipsesOutline } from 'ionicons/icons';
+
 
 import {
   IonContent,
@@ -10,7 +12,11 @@ import {
   IonTitle,
   IonButtons,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonInput,
+  IonLabel,
+  IonItem,
+  IonList
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -27,25 +33,39 @@ import { logOutOutline, menuOutline } from 'ionicons/icons';
     IonButtons,
     IonButton,
     IonIcon,
-    CommonModule
+    CommonModule,
+    IonLabel,
+    IonInput,
+    IonItem,
+    IonList
+   
+  
   ],
+
+  
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
 
   userName: string = '';
+  FullName: string ='';
   dashboardData: any;
   isLoading: boolean = true;
+  users: any[] = [];
+  isChatOpen: boolean = false;
+  
   
 
   constructor(
     private router: Router,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+   
   ) {
     addIcons({
       logOutOutline,
-      menuOutline
+      menuOutline,
+      chatbubbleEllipsesOutline
     });
   }
 
@@ -54,6 +74,7 @@ export class DashboardComponent implements OnInit {
     this.userName = name ? this.formatName(name) : 'User';
 
     this.loadDashboard();
+    this.loadUsers();
   }
 
   loadDashboard() {
@@ -85,4 +106,27 @@ export class DashboardComponent implements OnInit {
     localStorage.clear();
     this.router.navigate(['/login'], { replaceUrl: true });
   }
+
+  openChat(userId: number) {
+  this.router.navigate(['/chat', userId]);  // 👈 pass receiverId
+}
+
+loadUsers() {
+  this.dashboardService.getUsers().subscribe({
+    next: (res) => {
+      this.users = res;
+      console.log('Users:', res);
+    },
+    error: (err) => {
+      console.error('User load error:', err);
+    }
+  });
+}
+
+toggleChat() {
+  this.isChatOpen = !this.isChatOpen;
+}
+
+
+
 }

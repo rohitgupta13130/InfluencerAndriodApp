@@ -123,6 +123,42 @@
       </div>
     </div>
 
-  </div>
+    <!-- ✅ CHAT BUTTON
+   <ion-list>
+  <ion-item *ngFor="let user of users">
+    
+    <ion-label>
+      {{ user.fullName || user.userName }}
+    </ion-label>
 
-</ion-content>
+    <ion-button (click)="openChat(user.id)">
+      Chat
+    </ion-button>
+
+  </ion-item>
+  </ion-list> -->
+
+
+  <ion-button class="chat-fab" (click)="toggleChat()">
+  <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+</ion-button>
+
+<ion-list *ngIf="isChatOpen" class="chat-list">
+  <ion-item *ngFor="let user of users">
+    
+    <ion-label>
+      {{ user.fullName || user.userName }}
+    </ion-label>
+
+    <ion-button (click)="openChat(user.id)">
+      Chat
+    </ion-button>
+
+  </ion-item>
+</ion-list>
+
+ 
+
+   
+   
+
