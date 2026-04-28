@@ -1,0 +1,319 @@
+/* ================= TOPBAR ================= */
+.nav-bar {
+  --background: linear-gradient(90deg, #6a5cff, #ff4fa0);
+  color: white;
+  position: relative;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  gap: 16px;
+  color: white;
+  min-height: 65px;
+  position: relative;
+}
+
+/* FORCE WHITE */
+ion-icon {
+  color: white !important;
+}
+
+ion-button {
+  --color: white;
+}
+
+ion-title {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+/* LEFT SECTION */
+.left-section {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+/* SEARCH BOX */
+.search-box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  padding: 5px 10px;
+  width: 300px;
+  max-width: 500px;
+  min-width: 200px;
+  z-index: 1;
+}
+
+.search-box ion-icon {
+  color: gray !important;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  margin-left: 5px;
+  color: black;
+  background: transparent;
+}
+
+/* RIGHT SECTION */
+.right-section {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+/* PROFILE PIC */
+.profile-pic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* LOGOUT TEXT */
+.logout-text {
+  color: white;
+  margin-left: 4px;
+}
+
+/* ================= MOBILE (max-width: 768px) ================= */
+@media (max-width: 768px) {
+  .topbar {
+    min-height: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  /* Reset absolute positioning for mobile */
+  .left-section,
+  .search-box,
+  .right-section,
+  ion-title {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+  
+  ion-title {
+    white-space: normal;
+  }
+  
+  .left-section {
+    justify-content: space-between;
+    width: 100%;
+    order: 1;
+    margin-bottom: 10px;
+  }
+  
+  .search-box {
+    width: 100%;
+    max-width: 100%;
+    order: 2;
+    margin-bottom: 10px;
+  }
+  
+  .right-section {
+    justify-content: space-between;
+    width: 100%;
+    order: 3;
+  }
+  
+  .logout-text {
+    display: none;
+  }
+}
+
+/* ================= DESKTOP & LAPTOP (min-width: 769px) ================= */
+@media (min-width: 769px) {
+  .topbar {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  /* Keep absolute positioning on desktop */
+  .left-section {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .search-box {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .right-section {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  ion-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* ================= TABLET (769px - 1024px) ================= */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .search-box {
+    width: 350px;
+    max-width: 400px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ================= LARGE SCREENS (min-width: 1025px) ================= */
+@media (min-width: 1025px) {
+  .search-box {
+    width: 400px;
+    max-width: 500px;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ================= LAYOUT ================= */
+.layout {
+  display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #1e1e2f;
+  color: white;
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar.hide {
+  transform: translateX(-100%);
+}
+
+.menu-item {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #6a5cff;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 20px;
+  background: #f5f6fa;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  gap: 15px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.actions ion-button {
+  flex: 1;
+}
+
+/* BACKDROP */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 999;
+}
+
+/* EXTRA SMALL MOBILE (≤576px) */
+@media (max-width: 576px) {
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    z-index: 1000;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* SMALL TABLET GRID */
+@media (min-width: 577px) and (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Dashboard Background */
+.dashboard {
+  --background: #f5f6fa;
+}

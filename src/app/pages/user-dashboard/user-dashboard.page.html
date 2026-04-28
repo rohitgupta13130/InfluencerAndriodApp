@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar class="topbar nav-bar">
+
+    <!-- LEFT -->
+    <div class="left-section">
+      <ion-button fill="clear" (click)="toggleSidebar()">
+        <ion-icon name="menu-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- TITLE (CENTERED) -->
+    <ion-title>Influencer Connect</ion-title>
+
+    <!-- CENTER SEARCH -->
+    <div class="search-box">
+      <ion-icon name="search-outline"></ion-icon>
+      <input 
+        type="text" 
+        [(ngModel)]="searchText"
+        (input)="filterInfluencers()"
+        placeholder="Search influencers..." 
+      />
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-section">
+      <ion-button fill="clear" (click)="openNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <img [src]="userProfilePic" class="profile-pic"/>
+
+      <ion-button fill="clear" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        <span class="logout-text">Logout</span>
+      </ion-button>
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dashboard">
+ 
+  <!-- BACKDROP -->
+  <div class="backdrop" *ngIf="!isSidebarHidden" (click)="toggleSidebar()"></div>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" [class.hide]="isSidebarHidden">
+      <div class="menu-item" (click)="navigate('home')">🏠 Home</div>
+      <div class="menu-item" (click)="navigate('explore')">🔍 Explore</div>
+      <div class="menu-item" (click)="navigate('messages')">💬 Messages</div>
+      <div class="menu-item">❤️ Saved</div>
+      <div class="menu-item">⚙️ Settings</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <h2>Explore Influencers</h2>
+
+      <div class="grid">
+        <div class="card" *ngFor="let user of filteredUsers">
+
+          <img [src]="getUserImage(user)" />
+
+          <h3>{{ user.fullName || user.userName }}</h3>
+
+          <p>Category: Lifestyle</p>
+          <p>Followers: {{ formatNumber(user.followers || 120000) }}</p>
+
+          <div class="actions">
+            <ion-button size="small">Profile</ion-button>
+            <ion-button size="small" color="success" (click)="openChat(user)">
+              Chat
+            </ion-button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</ion-content>

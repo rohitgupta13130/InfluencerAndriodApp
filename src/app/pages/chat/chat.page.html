@@ -8,7 +8,30 @@
       </ion-button>
     </ion-buttons>
 
-    <ion-title>Chat</ion-title>
+    <!-- <ion-title>Chat</ion-title> -->
+     <ion-title>
+
+  <div style="display:flex; align-items:center; gap:10px;">
+
+    <!-- 🔥 RECEIVER IMAGE -->
+    <img [src]="receiverAvatar" class="avatar"/>
+
+    <div>
+      {{ selectedFullName || selectedUserName || 'Chat' }}
+
+      <div style="font-size: 12px;">
+        <span *ngIf="selectedUser?.isOnline" style="color: lightgreen;">
+          Online
+        </span>
+        <span *ngIf="!selectedUser?.isOnline && selectedUser?.lastSeen">
+          Last seen {{ selectedUser.lastSeen | date:'shortTime':'Asia/Kolkata' }}
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+</ion-title>
 
   </ion-toolbar>
 </ion-header>
@@ -26,6 +49,11 @@
 
       <div class="time">
         {{ msg.createdDate | date:'shortTime' }}
+
+         <!-- ✅ SHOW STATUS -->
+        <span *ngIf="msg.senderId == senderId">
+          • {{ msg.isRead ? 'Seen' : 'Sent' }}
+        </span>
       </div>
 
     </div>
@@ -37,8 +65,10 @@
 <ion-footer>
   <ion-toolbar>
 
-    <ion-input [(ngModel)]="newMessage"
-               placeholder="Type message...">
+    <ion-input
+      [(ngModel)]="newMessage"
+      placeholder="Type message..."
+      (keydown.enter)="sendMessage()">
     </ion-input>
 
     <ion-buttons slot="end">

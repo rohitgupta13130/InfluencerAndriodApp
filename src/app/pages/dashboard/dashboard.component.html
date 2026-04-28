@@ -25,7 +25,7 @@
   <div class="welcome">
     <img src="https://i.pravatar.cc/100" />
     <div>
-      <h2>Welcome Back, {{ userName }} 👋</h2>
+      <h2>Welcome Back, {{ fullName || userName }} 👋</h2>
       <p>Your Performance Overview</p>
     </div>
   </div>
@@ -150,7 +150,11 @@
       {{ user.fullName || user.userName }}
     </ion-label>
 
-    <ion-button (click)="openChat(user.id)">
+    <!-- <ion-button (click)="openChat(user.id)">
+      Chat
+    </ion-button> -->
+
+    <ion-button (click)="openChat(user)">
       Chat
     </ion-button>
 

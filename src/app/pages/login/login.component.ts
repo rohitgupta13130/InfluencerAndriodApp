@@ -98,8 +98,10 @@ export class LoginComponent {
       // ✅ store other data
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userName', res.userName);
-      localStorage.setItem('userId', res.userId);
+     // localStorage.setItem('userId', res.userId);
+     localStorage.setItem('userId', res.userId.toString());
       localStorage.setItem('userType', res.userType);
+      
 
       // 🔥 FIX 2: SINGLE NAVIGATION
       this.router.navigate(['/dashboard'], { replaceUrl: true });

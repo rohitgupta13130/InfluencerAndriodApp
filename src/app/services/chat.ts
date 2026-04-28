@@ -29,4 +29,13 @@ export class ChatService {
       { withCredentials: true } // 🔥 IMPORTANT
     );
   }
+
+  markAsRead(messageId: number) {
+  return this.http.patch(
+    //`https://localhost:7117/api/chat/read/${messageId}`,
+     `https://influencerapi-09to.onrender.com/api/chat/read/${messageId}`,
+    {},
+    { withCredentials: true }
+  );
+}
 }

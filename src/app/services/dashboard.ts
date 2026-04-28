@@ -36,8 +36,17 @@ export class DashboardService {
 
   getUsers(): Observable<any[]> {
   return this.http.get<any[]>(
-    //'https://localhost:7117/api/User/GetAllUsers'
+   // 'https://localhost:7117/api/User/GetAllUsers'
     'https://influencerapi-09to.onrender.com/api/User/GetAllUsers'
+  );
+}
+
+logout(userId: any) {
+  return this.http.post(
+   // `https://localhost:7117/api/User/Logout?userId=${userId}`,
+    `https://influencerapi-09to.onrender.com/api/User/Logout?userId=${userId}`,
+    {},
+    { responseType: 'text' } // ✅ IMPORTANT
   );
 }
 

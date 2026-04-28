@@ -28,7 +28,11 @@ export const routes: Routes = [
   path: 'chat/:id',
   loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage),
   canActivate: [authGuard] // optional but recommended
+  },  {
+    path: 'user-dashboard',
+    loadComponent: () => import('./pages/user-dashboard/user-dashboard.page').then( m => m.UserDashboardPage)
   }
+
   
 
 ];

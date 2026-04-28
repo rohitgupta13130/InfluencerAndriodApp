@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { DashboardService } from '../../services/dashboard';
 import { CommonModule } from '@angular/common';
 import { chatbubbleEllipsesOutline } from 'ionicons/icons';
+import { jwtDecode } from 'jwt-decode';
 
 
 import {
@@ -13,7 +14,7 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
-  IonInput,
+
   IonLabel,
   IonItem,
   IonList
@@ -35,7 +36,7 @@ import { logOutOutline, menuOutline } from 'ionicons/icons';
     IonIcon,
     CommonModule,
     IonLabel,
-    IonInput,
+   
     IonItem,
     IonList
    
@@ -49,7 +50,7 @@ import { logOutOutline, menuOutline } from 'ionicons/icons';
 export class DashboardComponent implements OnInit {
 
   userName: string = '';
-  FullName: string ='';
+  fullName: string = ''; 
   dashboardData: any;
   isLoading: boolean = true;
   users: any[] = [];
@@ -69,13 +70,34 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    const name = localStorage.getItem('userName');
-    this.userName = name ? this.formatName(name) : 'User';
+  // ngOnInit() {
 
-    this.loadDashboard();
-    this.loadUsers();
+  //   const name = localStorage.getItem('fullName'); // if stored
+  //   this.fullName = name || '';
+
+  //   // const username = localStorage.getItem('userName');
+  //   // this.userName = username ? this.formatName(username) : 'User';
+
+  //   this.loadDashboard();
+  //   this.loadUsers();
+  // }
+
+  ngOnInit() {
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    const decoded: any = jwtDecode(token);
+
+    console.log('Decoded Token:', decoded);
+
+    this.fullName = decoded.FullName; // ✅ GET FULL NAME
+    this.userName = decoded.UserName; // optional
   }
+
+  this.loadDashboard();
+  this.loadUsers();
+}
 
   loadDashboard() {
     this.dashboardService.getDashboard().subscribe({
@@ -102,14 +124,44 @@ export class DashboardComponent implements OnInit {
     return num.toString();
   }
 
+  // logout() {
+  //   localStorage.clear();
+  //   this.router.navigate(['/login'], { replaceUrl: true });
+  // }
+
   logout() {
-    localStorage.clear();
-    this.router.navigate(['/login'], { replaceUrl: true });
+  const userId = localStorage.getItem('userId');
+
+  this.dashboardService.logout(userId).subscribe({
+    next: () => {
+      localStorage.clear();
+      this.router.navigate(['/login'], { replaceUrl: true });
+    },
+    error: (err) => {
+      console.error('Logout error:', err);
+    }
+  });
   }
 
-  openChat(userId: number) {
-  this.router.navigate(['/chat', userId]);  // 👈 pass receiverId
+  // openChat(userId: number) {
+  // this.router.navigate(['/chat', userId]);  // 👈 pass receiverId
+
+  openChat(user: any) {
+  console.log('Clicked user:', user);
+
+  const id = user.id || user.userId;
+
+  if (!id) {
+    console.error('❌ ID missing:', user);
+    return;
+  }
+
+  this.router.navigate(['/chat', id], {
+    state: { user }
+  });
 }
+
+
 
 loadUsers() {
   this.dashboardService.getUsers().subscribe({
