@@ -71,7 +71,6 @@ export class LoginComponent {
   }
 
  login() {
-
   if (this.loginForm.invalid) {
     this.loginForm.markAllAsTouched();
     return;
@@ -87,40 +86,36 @@ export class LoginComponent {
 
   this.authService.login(payload).subscribe({
     next: (res: any) => {
-
       this.isSubmitting = false;
 
-      console.log("Login Response:", res); // 🔍 DEBUG
-
-      // 🔥 FIX 1: SAVE TOKEN
+      // Save token and user data
       localStorage.setItem('token', res.token);
-
-      // ✅ store other data
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userName', res.userName);
-     // localStorage.setItem('userId', res.userId);
-     localStorage.setItem('userId', res.userId.toString());
+      localStorage.setItem('userId', res.userId.toString());
       localStorage.setItem('userType', res.userType);
+
+      // 🔥 Redirect based on user type
+      const userType = res.userType?.toLowerCase();
       
-
-      // 🔥 FIX 2: SINGLE NAVIGATION
-      this.router.navigate(['/dashboard'], { replaceUrl: true });
+      if (userType === 'influencer') {
+        this.router.navigate(['/influencer-dashboard'], { replaceUrl: true });
+      } else if (userType === 'admin') {
+        this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
+      } else {
+        // Regular user
+        this.router.navigate(['/user-dashboard'], { replaceUrl: true });
+      }
     },
-
     error: (err) => {
-
       this.isSubmitting = false;
-
       if (err?.error?.errors) {
         const errors = err.error.errors;
         this.loginError = Object.keys(errors)
           .map(key => errors[key].join(', '))
           .join(', ');
       } else {
-        this.loginError =
-          err?.error?.message ||
-          err?.message ||
-          'Invalid username or password';
+        this.loginError = err?.error?.message || 'Invalid username or password';
       }
     }
   });

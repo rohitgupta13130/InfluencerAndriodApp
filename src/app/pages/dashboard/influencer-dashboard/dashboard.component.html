@@ -1,0 +1,170 @@
+<ion-header>
+  <ion-toolbar class="topbar nav-bar">
+
+    <!-- LEFT SECTION -->
+    <div class="left-section">
+      <ion-button fill="clear" (click)="toggleSidebar()">
+        <ion-icon name="menu-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- TITLE (CENTERED) -->
+    <ion-title>Influencer Connect</ion-title>
+
+    <!-- CENTER SEARCH (Optional - hidden if not needed) -->
+    <div class="search-box" *ngIf="false">
+      <ion-icon name="search-outline"></ion-icon>
+      <input 
+        type="text" 
+        [(ngModel)]="searchText"
+        (input)="filterInfluencers()"
+        placeholder="Search influencers..." 
+      />
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right-section">
+      <ion-button fill="clear" (click)="openNotifications()">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <img [src]="userProfilePic" class="profile-pic"/>
+
+      <ion-button fill="clear" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+        <span class="logout-text">Logout</span>
+      </ion-button>
+    </div>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dashboard">
+
+  <!-- SIDEBAR BACKDROP -->
+  <div class="backdrop" *ngIf="!isSidebarHidden" (click)="toggleSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" [class.hide]="isSidebarHidden">
+    <div class="menu-item" (click)="navigate('home')">🏠 Home</div>
+    <div class="menu-item" (click)="navigate('explore')">🔍 Explore</div>
+    <div class="menu-item" (click)="navigate('messages')">💬 Messages</div>
+    <div class="menu-item">❤️ Saved</div>
+    <div class="menu-item">⚙️ Settings</div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content" [class.sidebar-hidden]="isSidebarHidden">
+    
+    <!-- Welcome -->
+    <div class="welcome">
+      <img src="https://i.pravatar.cc/100" />
+      <div>
+        <h2>Welcome Back, {{ fullName || userName }} 👋</h2>
+        <p>Your Performance Overview</p>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div *ngIf="isLoading">
+      Loading dashboard...
+    </div>
+
+    <!-- Cards -->
+    <div *ngIf="dashboardData">
+      <div class="cards">
+        <div class="card gradient1">
+          <h4>Earnings</h4>
+          <h2>₹{{ dashboardData?.earning }}</h2>
+          <p>Total</p>
+        </div>
+
+        <div class="card gradient2">
+          <h4>Followers</h4>
+          <h2>{{ formatNumber(dashboardData?.followers) }}</h2>
+          <p>Growth</p>
+        </div>
+
+        <div class="card gradient3">
+          <h4>Campaign</h4>
+          <h2>{{ dashboardData?.campaign }}</h2>
+          <p>Active</p>
+        </div>
+
+        <div class="card gradient4">
+          <h4>Engagement</h4>
+          <h2>{{ dashboardData?.engagement }}</h2>
+          <p>Status</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="analytics">
+      <h3>Analytics</h3>
+      <img src="https://picsum.photos/600/200" class="chart"/>
+      <div class="stats">
+        <div>
+          <h3>150K</h3>
+          <p>Reach</p>
+        </div>
+        <div>
+          <h3>18K</h3>
+          <p>Likes</p>
+        </div>
+        <div>
+          <h3>3,200</h3>
+          <p>Comments</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campaigns + Brands -->
+    <div class="bottom-section">
+      <div class="campaigns">
+        <h3>Active Campaigns</h3>
+        <div class="campaign-card">
+          <img src="https://picsum.photos/100/100?random=1" />
+          <div>
+            <h4>FitLife Promo</h4>
+            <p>Due: Aug 12</p>
+          </div>
+        </div>
+        <div class="campaign-card">
+          <img src="https://picsum.photos/100/100?random=2" />
+          <div>
+            <h4>GlamWear Collab</h4>
+            <p>Due: Aug 20</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="brands">
+        <h3>Top Brands</h3>
+        <div class="brand-logos">
+          <img src="https://picsum.photos/80?random=3" />
+          <img src="https://picsum.photos/80?random=4" />
+          <img src="https://picsum.photos/80?random=5" />
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT FAB AND LIST -->
+    <ion-button class="chat-fab" (click)="toggleChat()">
+      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+    </ion-button>
+
+    <ion-list *ngIf="isChatOpen" class="chat-list">
+      <ion-item *ngFor="let user of users">
+        <ion-label>
+          {{ user.fullName || user.userName }}
+        </ion-label>
+        <ion-button (click)="openChat(user)">
+          Chat
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+  </div>
+
+</ion-content>

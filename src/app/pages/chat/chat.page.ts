@@ -160,7 +160,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
   // 🔥 MINIMIZE (GO TO DASHBOARD)
   minimizeChat() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/influencer-dashboard']);
   }
 
   ngOnDestroy() {

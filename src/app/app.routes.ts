@@ -3,10 +3,6 @@ import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
     path: 'login',
     loadComponent: () => import('./pages/login/login.component').then((m) => m.LoginComponent),
   },
@@ -14,9 +10,25 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () => import('./pages/register/register.component').then((m) => m.RegisterComponent),
   },
-
-  { path: 'dashboard', 
-    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),canActivate: [authGuard]  
+  {
+    path: 'home',
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'influencer-dashboard', 
+    loadComponent: () => import('./pages/dashboard/influencer-dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [authGuard]  
+  },
+  {
+    path: 'user-dashboard',
+    loadComponent: () => import('./pages/dashboard/user-dashboard/user-dashboard.page').then(m => m.UserDashboardPage),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'chat/:id',
+    loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage),
+    canActivate: [authGuard]
   },
   {
     path: '',
@@ -24,15 +36,9 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    
-  path: 'chat/:id',
-  loadComponent: () => import('./pages/chat/chat.page').then(m => m.ChatPage),
-  canActivate: [authGuard] // optional but recommended
-  },  {
-    path: 'user-dashboard',
-    loadComponent: () => import('./pages/user-dashboard/user-dashboard.page').then( m => m.UserDashboardPage)
-  }
+    path: '**',
+    redirectTo: 'login'
+  },
 
-  
 
 ];

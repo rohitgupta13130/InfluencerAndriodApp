@@ -12,7 +12,7 @@ import {
   IonTitle
 } from '@ionic/angular/standalone';
 
-import { DashboardService } from '../../services/dashboard';
+import { DashboardService } from '../../../services/dashboard';
 
 import { addIcons } from 'ionicons';
 import {
@@ -34,7 +34,6 @@ import {
     IonHeader,
     IonToolbar,
     IonTitle
-    
   ],
   templateUrl: './user-dashboard.page.html',
   styleUrls: ['./user-dashboard.page.scss']
@@ -45,7 +44,7 @@ export class UserDashboardPage implements OnInit {
   users: any[] = [];
   filteredUsers: any[] = [];
   searchText: string = '';
-  isSidebarHidden: boolean = true; // default hidden for mobile UX
+  isSidebarHidden: boolean = true;
   userProfilePic: string = 'https://i.pravatar.cc/40?img=1';
 
   // ================= CONSTRUCTOR =================
@@ -70,7 +69,7 @@ export class UserDashboardPage implements OnInit {
       logOutOutline
     });
   }
-
+  
   // ================= API =================
   loadUsers(): void {
     this.dashboardService.getUsers().subscribe({
@@ -85,14 +84,13 @@ export class UserDashboardPage implements OnInit {
   }
 
   // ================= SEARCH =================
-filterInfluencers(): void {
-  const text = this.searchText?.toLowerCase().trim() || '';
-
-  this.filteredUsers = this.users.filter(user => {
-    const name = (user.fullName || user.userName || '').toLowerCase();
-    return name.includes(text);
-  });
-}
+  filterInfluencers(): void {
+    const text = this.searchText?.toLowerCase().trim() || '';
+    this.filteredUsers = this.users.filter(user => {
+      const name = (user.fullName || user.userName || '').toLowerCase();
+      return name.includes(text);
+    });
+  }
 
   // ================= UI ACTIONS =================
   toggleSidebar(): void {
@@ -112,7 +110,6 @@ filterInfluencers(): void {
     };
 
     const route = routes[page];
-
     if (route) {
       this.router.navigate([route]);
     } else {
@@ -120,15 +117,42 @@ filterInfluencers(): void {
     }
   }
 
-  // ================= CHAT =================
+  // ================= PROFILE NAVIGATION =================
+  openProfile(user: any): void {
+    // Check token before navigation
+    const token = localStorage.getItem('token');
+    console.log('Token before profile navigation:', token);
+    
+    if (!token) {
+      console.error('No token found, redirecting to login');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    // Get user ID from the user object
+    const id = user?.id || user?.userId;
+    console.log('Navigating to profile with ID:', id);
+    
+    if (!id) {
+      console.error('❌ Missing user ID:', user);
+      // Show error toast or alert
+      return;
+    }
+    
+    // Add small delay to prevent routing issues
+    setTimeout(() => {
+      this.router.navigate(['/profile', id]);
+    }, 100);
+  }
+
+  // ================= CHAT NAVIGATION =================
   openChat(user: any): void {
     const id = user?.id || user?.userId;
-
     if (!id) {
       console.error('❌ Missing user ID:', user);
       return;
     }
-
+    
     this.router.navigate(['/chat', id], {
       state: { user }
     });

@@ -70,7 +70,9 @@
           <p>Followers: {{ formatNumber(user.followers || 120000) }}</p>
 
           <div class="actions">
-            <ion-button size="small">Profile</ion-button>
+            <ion-button size="small" (click)="openProfile(user)">
+              Profile
+            </ion-button>
             <ion-button size="small" color="success" (click)="openChat(user)">
               Chat
             </ion-button>
