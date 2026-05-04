@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar class="profile-header">
+    <ion-title>User Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-bg" *ngIf="user">
+
+  <div class="profile-container">
+
+    <div class="profile-card">
+
+      <!-- Profile Image -->
+      <div class="image-wrapper">
+        <img 
+          [src]="'https://i.pravatar.cc/150?img=' + user.id" 
+          class="profile-img"
+        />
+
+        <!-- Online Dot -->
+        <span 
+          class="status-dot" 
+          [class.online]="user.isOnline">
+        </span>
+      </div>
+
+      <!-- Name -->
+      <h2 class="name">
+        {{ user.fullName || 'No Name' }}
+      </h2>
+
+      <!-- Email -->
+      <p class="email">
+        {{ user.email }}
+      </p>
+
+      <!-- Info -->
+      <div class="info-box">
+        <p><span>Type:</span> {{ user.userTypeName }}</p>
+        <p>
+          <span>Status:</span> 
+          <span [class.online-text]="user.isOnline"
+                [class.offline-text]="!user.isOnline">
+            {{ user.isOnline ? 'Online' : 'Offline' }}
+          </span>
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

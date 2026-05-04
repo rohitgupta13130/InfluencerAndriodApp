@@ -118,32 +118,47 @@ export class UserDashboardPage implements OnInit {
   }
 
   // ================= PROFILE NAVIGATION =================
-  openProfile(user: any): void {
-    // Check token before navigation
-    const token = localStorage.getItem('token');
-    console.log('Token before profile navigation:', token);
+  // openProfile(user: any): void {
+  //   // Check token before navigation
+  //   const token = localStorage.getItem('token');
+  //   console.log('Token before profile navigation:', token);
     
-    if (!token) {
-      console.error('No token found, redirecting to login');
-      this.router.navigate(['/login']);
-      return;
-    }
+  //   if (!token) {
+  //     console.error('No token found, redirecting to login');
+  //     this.router.navigate(['/login']);
+  //     return;
+  //   }
     
-    // Get user ID from the user object
-    const id = user?.id || user?.userId;
-    console.log('Navigating to profile with ID:', id);
+  //   // Get user ID from the user object
+  //   const id = user?.id || user?.userId;
+  //   console.log('Navigating to profile with ID:', id);
     
-    if (!id) {
-      console.error('❌ Missing user ID:', user);
-      // Show error toast or alert
-      return;
-    }
+  //   if (!id) {
+  //     console.error('❌ Missing user ID:', user);
+  //     // Show error toast or alert
+  //     return;
+  //   }
     
-    // Add small delay to prevent routing issues
-    setTimeout(() => {
-      this.router.navigate(['/profile', id]);
-    }, 100);
+  //   // Add small delay to prevent routing issues
+  //   setTimeout(() => {
+  //     this.router.navigate(['/profile', id]);
+  //   }, 100);
+  // }
+
+
+
+
+ openProfile(user: any): void {
+  const id = user?.id || user?.userId;
+
+  if (!id) {
+    console.error('❌ Missing user ID');
+    return;
   }
+
+  this.router.navigate(['/profile', id]);
+}
+
 
   // ================= CHAT NAVIGATION =================
   openChat(user: any): void {

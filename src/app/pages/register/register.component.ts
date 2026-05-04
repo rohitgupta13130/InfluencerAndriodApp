@@ -8,7 +8,8 @@ import {
   IonItem,
   IonInput,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonLabel
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -16,7 +17,8 @@ import {
   mailOutline,
   lockClosedOutline,
   callOutline,
-  personOutline
+  personOutline,
+  imageOutline
 } from 'ionicons/icons';
 
 import { AuthService } from '../../services/register.service';
@@ -33,7 +35,8 @@ import { AuthService } from '../../services/register.service';
     IonItem,
     IonInput,
     IonButton,
-    IonIcon
+    IonIcon,
+    IonLabel
   ]
 })
 export class RegisterComponent {
@@ -42,26 +45,28 @@ export class RegisterComponent {
   registerSuccess = false;
   registerError = '';
   isSubmitting = false;
+  selectedFile: File | null = null;
+  formSubmitted = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService
   ) {
-
     addIcons({
       mailOutline,
       lockClosedOutline,
       callOutline,
-      personOutline
+      personOutline,
+      imageOutline
     });
 
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      userTypeId: [1, Validators.required] // ✅ NEW (default User)
+      userTypeId: [1, Validators.required]
     });
   }
 
@@ -69,9 +74,35 @@ export class RegisterComponent {
     return this.registerForm.controls;
   }
 
-  register() {
+  // ✅ FILE SELECT WITH VALIDATION
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
 
-    if (this.registerForm.invalid) {
+    if (!file) return;
+
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+    if (!allowedTypes.includes(file.type)) {
+      this.registerError = 'Only JPG/PNG allowed';
+      this.selectedFile = null;
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      this.registerError = 'File must be less than 2MB';
+      this.selectedFile = null;
+      return;
+    }
+
+    this.registerError = '';
+    this.selectedFile = file;
+  }
+
+  // ✅ REGISTER
+  register() {
+    this.formSubmitted = true;
+
+    if (this.registerForm.invalid || !this.selectedFile) {
       this.registerForm.markAllAsTouched();
       return;
     }
@@ -79,40 +110,44 @@ export class RegisterComponent {
     this.isSubmitting = true;
     this.registerError = '';
 
-    const payload = {
-      fullName: this.f['name'].value.trim(),
-      email: this.f['email'].value.trim(),
-      phoneNumber: this.f['phone'].value.trim(),
-      password: this.f['password'].value.trim(),
-      userTypeId: this.f['userTypeId'].value
-    };
+    const formData = new FormData();
 
-    this.authService.register(payload).subscribe({
+    formData.append('fullName', this.f['name'].value.trim());
+    formData.append('email', this.f['email'].value.trim());
+    formData.append('phoneNumber', this.f['phone'].value.trim());
+    formData.append('password', this.f['password'].value.trim());
+    formData.append('userTypeId', this.f['userTypeId'].value.toString());
 
-      next: () => {
+    if (this.selectedFile) {
+      formData.append('profileImage', this.selectedFile);
+    }
+
+    this.authService.register(formData).subscribe({
+      next: (res) => {
+        console.log('SUCCESS:', res);
+
         this.isSubmitting = false;
         this.registerSuccess = true;
-
         this.registerForm.reset();
+        this.selectedFile = null;
+        this.formSubmitted = false;
 
         setTimeout(() => {
           this.router.navigate(['/login'], { replaceUrl: true });
         }, 1500);
       },
-
       error: (err) => {
+        console.log('ERROR:', err);
+
         this.isSubmitting = false;
 
-        if (err?.error?.errors) {
-          const errors = err.error.errors;
-
-          this.registerError = Object.keys(errors)
-            .map(key => errors[key].join(', '))
-            .join(', ');
+        // ✅ BETTER ERROR HANDLING
+        if (err.status === 400) {
+          this.registerError = err.error || 'User already exists';
+        } else if (err.status === 500) {
+          this.registerError = 'Server error (check backend)';
         } else {
-          this.registerError =
-            err?.error?.message ||
-            'Registration failed. Try again.';
+          this.registerError = 'Registration failed';
         }
       }
     });

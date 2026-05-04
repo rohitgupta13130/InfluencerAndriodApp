@@ -103,19 +103,26 @@ export class DashboardComponent implements OnInit {
     return num.toString();
   }
 
-  logout() {
-    const userId = localStorage.getItem('userId');
+  llogout() {
+  const userIdStr = localStorage.getItem('userId');
 
-    this.dashboardService.logout(userId).subscribe({
-      next: () => {
-        localStorage.clear();
-        this.router.navigate(['/login'], { replaceUrl: true });
-      },
-      error: (err) => {
-        console.error('Logout error:', err);
-      }
-    });
+  if (!userIdStr) {
+    console.error('UserId not found in localStorage');
+    return;
   }
+
+  const userId = Number(userIdStr);
+
+  this.dashboardService.logout(userId).subscribe({
+    next: () => {
+      localStorage.clear();
+      this.router.navigate(['/login'], { replaceUrl: true });
+    },
+    error: (err) => {
+      console.error('Logout error:', err);
+    }
+  });
+}
 
   openChat(user: any) {
     console.log('Clicked user:', user);
@@ -172,5 +179,10 @@ export class DashboardComponent implements OnInit {
 
   filterInfluencers() {
     // Optional: implement search functionality
+  }
+
+  logout(): void {
+    localStorage.clear();
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 }

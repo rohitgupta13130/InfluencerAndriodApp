@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,47 +7,36 @@ import { Observable } from 'rxjs';
 })
 export class DashboardService {
 
-   // private baseUrl = 'https://localhost:7117/api/Dashboard';
-   // private userUrl = 'https://localhost:7117/api/user'; 
-    private userUrl = 'https://influencerapi-09to.onrender.com/api/user'
-    private baseUrl = 'https://influencerapi-09to.onrender.com/api/dashboard';
+  //  private readonly baseUrl = 'https://localhost:7117/api/dashboard';
+  //  private readonly userUrl = 'https://localhost:7117/api/User';
+
+    private readonly baseUrl = 'https://influencerapi-09to.onrender.com/api/dashboard';
+    private readonly userUrl = 'https://influencerapi-09to.onrender.com/api/User';
 
   constructor(private http: HttpClient) {}
 
-  // getDashboard(): Observable<any> {
-
-  //   const token = localStorage.getItem('token');
-
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${token}`
-  //   });
-
-  //   return this.http.get(this.baseUrl, { headers });
-  // }
-
+  // ================= DASHBOARD =================
   getDashboard(): Observable<any> {
-  return this.http.get(
-    this.baseUrl,
-    {
-      withCredentials: true // 🔥 MOST IMPORTANT
-    }
-  );
-}
+    return this.http.get<any>(this.baseUrl);
+  }
 
+  // ================= GET USERS =================
   getUsers(): Observable<any[]> {
-  return this.http.get<any[]>(
-   // 'https://localhost:7117/api/User/GetAllUsers'
-    'https://influencerapi-09to.onrender.com/api/User/GetAllUsers'
-  );
-}
+    return this.http.get<any[]>(`${this.userUrl}/GetAllUsers`);
+  }
 
-logout(userId: any) {
-  return this.http.post(
-   // `https://localhost:7117/api/User/Logout?userId=${userId}`,
-    `https://influencerapi-09to.onrender.com/api/User/Logout?userId=${userId}`,
-    {},
-    { responseType: 'text' } // ✅ IMPORTANT
-  );
-}
+  // ================= LOGOUT =================
+  logout(userId: number): Observable<string> {
 
+    const params = new HttpParams().set('userId', userId.toString());
+
+    return this.http.post<string>(
+      `${this.userUrl}/Logout`,
+      {}, // empty body
+      {
+        params,
+        responseType: 'text' as 'json'
+      }
+    );
+  }
 }

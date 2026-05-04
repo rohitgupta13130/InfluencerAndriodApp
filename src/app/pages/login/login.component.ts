@@ -88,27 +88,31 @@ export class LoginComponent {
     next: (res: any) => {
       this.isSubmitting = false;
 
-      // Save token and user data
+      // ✅ Save data FIRST
       localStorage.setItem('token', res.token);
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('userName', res.userName);
       localStorage.setItem('userId', res.userId.toString());
       localStorage.setItem('userType', res.userType);
+      localStorage.setItem('userName', res.userName);
 
-      // 🔥 Redirect based on user type
+      console.log('✅ Token Saved:', res.token);
+
+      // ✅ Navigate AFTER saving token
       const userType = res.userType?.toLowerCase();
-      
+
       if (userType === 'influencer') {
         this.router.navigate(['/influencer-dashboard'], { replaceUrl: true });
       } else if (userType === 'admin') {
         this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
       } else {
-        // Regular user
         this.router.navigate(['/user-dashboard'], { replaceUrl: true });
       }
     },
+
     error: (err) => {
       this.isSubmitting = false;
+
+      console.error('❌ Login Error:', err);
+
       if (err?.error?.errors) {
         const errors = err.error.errors;
         this.loginError = Object.keys(errors)

@@ -1,39 +1,41 @@
 <ion-content fullscreen="true" class="login-bg">
 
   <div class="login-container">
-
     <div class="login-card">
 
+      <!-- Header -->
       <div class="logo-area">
         <h1 class="brand">
           <span class="blue">Influencer</span>
           <span class="pink">Connect</span>
         </h1>
-
         <h2>Welcome Back 👋</h2>
         <p>Find the perfect influencer</p>
       </div>
 
-      <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="form-compact">
 
         <!-- Username -->
-        <ion-item class="input-box">
+        <ion-item class="input-box"
+          [class.invalid]="f['username'].touched && f['username'].invalid">
+
           <ion-icon name="mail-outline" slot="start"></ion-icon>
 
           <ion-input
             placeholder="Email or Phone"
             formControlName="username">
           </ion-input>
+
         </ion-item>
 
-        <!-- Username Error -->
         <p class="error" *ngIf="f['username'].touched && f['username'].invalid">
-          <span *ngIf="f['username'].errors?.['required']">Username is required</span>
-          <span *ngIf="f['username'].errors?.['minlength']">Minimum 3 characters required</span>
+          Enter valid username
         </p>
 
         <!-- Password -->
-        <ion-item class="input-box">
+        <ion-item class="input-box"
+          [class.invalid]="f['password'].touched && f['password'].invalid">
+
           <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
 
           <ion-input
@@ -42,19 +44,16 @@
             formControlName="password">
           </ion-input>
 
-          <!-- 👁️ Toggle -->
           <ion-icon
             [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
             slot="end"
-            (click)="togglePassword()"
-            style="cursor:pointer;">
+            (click)="togglePassword()">
           </ion-icon>
+
         </ion-item>
 
-        <!-- Password Error -->
         <p class="error" *ngIf="f['password'].touched && f['password'].invalid">
-          <span *ngIf="f['password'].errors?.['required']">Password is required</span>
-          <span *ngIf="f['password'].errors?.['minlength']">Minimum 5 characters required</span>
+          Password must be at least 5 characters
         </p>
 
         <!-- API Error -->
@@ -62,26 +61,22 @@
           {{ loginError }}
         </p>
 
+        <!-- Forgot -->
         <div class="forgot">
           <a href="#">Forgot Password?</a>
         </div>
 
         <!-- Button -->
-        <ion-button
-          expand="block"
-          class="login-btn"
-          type="submit"
-          [disabled]="loginForm.invalid || isSubmitting">
-
-          <span *ngIf="!isSubmitting">Login</span>
-          <span *ngIf="isSubmitting">Logging in...</span>
-
+        <ion-button expand="block" class="login-btn" type="submit">
+          {{ isSubmitting ? 'Logging in...' : 'Login' }}
         </ion-button>
 
+        <!-- Divider -->
         <div class="divider">
           <span>OR</span>
         </div>
 
+        <!-- Social -->
         <ion-button expand="block" fill="outline" class="google-btn">
           <ion-icon name="logo-google" slot="start"></ion-icon>
           Continue with Google
@@ -92,6 +87,7 @@
           Continue with Facebook
         </ion-button>
 
+        <!-- Signup -->
         <div class="signup">
           <p>New here?</p>
           <ion-button fill="clear" (click)="goRegister()">
@@ -102,7 +98,6 @@
       </form>
 
     </div>
-
   </div>
 
 </ion-content>

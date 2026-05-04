@@ -1,37 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'; // ✅ REQUIRED
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface UserProfile {
+  id: number;
+  fullName: string;
+  userName: string;
+  email: string;
+  userTypeName: string;
+  userTypeId: number;
+  lastSeen: string | null;
+  isOnline: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
 })
-export class Profile {
+export class ProfileService {
 
-  constructor(private http: HttpClient) {} // ✅ INJECT
+ // private readonly baseUrl = 'https://localhost:7117/api/user';
+    private readonly baseUrl = 'https://influencerapi-09to.onrender.com/api/user';
 
-  // getUserById(id: number) {
-  //   const token = localStorage.getItem('token');
+  constructor(private http: HttpClient) {}
 
-  //   return this.http.get(
-  //     `https://influencerapi-09to.onrender.com/api/user/${id}`,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       }
-  //     }
-  //   );
-  // }
-
-
-  getMyProfile() {
-  const token = localStorage.getItem('token');
-
-  return this.http.get(
-    `https://influencerapi-09to.onrender.com/api/user/profile`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  );
-}
+  // ================= GET USER BY ID =================
+  getUserById(id: number): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.baseUrl}/${id}`);
+  }
 }
