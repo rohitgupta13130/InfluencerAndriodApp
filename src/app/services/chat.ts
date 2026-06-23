@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export interface ChatMessage {
   id: number;
@@ -10,30 +11,38 @@ export interface ChatMessage {
   isRead: boolean;
   createdAt: string;
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
- // private readonly baseUrl = 'https://localhost:7117/api/chat';
-  private readonly baseUrl = 'https://influencerapi-09to.onrender.com/api/chat'
+  private readonly baseUrl = `${environment.apiBaseUrl}/chat`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ================= GET CHAT =================
   getChat(receiverId: number): Observable<ChatMessage[]> {
-    return this.http.get<ChatMessage[]>(`${this.baseUrl}`, {
-      params: { receiverId: receiverId.toString() }
+    return this.http.get<ChatMessage[]>(this.baseUrl, {
+      params: {
+        receiverId: receiverId.toString()
+      }
     });
   }
 
-  // ================= SEND MESSAGE (FIXED) =================
-  sendMessage(payload: { receiverId: number; message: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, payload);
+  // ================= SEND MESSAGE =================
+  sendMessage(payload: {
+    receiverId: number;
+    message: string;
+  }): Observable<any> {
+    return this.http.post(this.baseUrl, payload);
   }
 
   // ================= MARK AS READ =================
   markAsRead(messageId: number): Observable<void> {
-    return this.http.patch<void>(`${this.baseUrl}/read/${messageId}`, {});
+    return this.http.patch<void>(
+      `${this.baseUrl}/read/${messageId}`,
+      {}
+    );
   }
 }

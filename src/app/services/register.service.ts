@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 // ================= REQUEST MODELS =================
 export interface RegisterRequest {
@@ -29,26 +30,22 @@ export interface LoginResponse {
 })
 export class AuthService {
 
-  //  private readonly baseUrl = 'https://localhost:7117/api/user';
-     private readonly baseUrl = 'https://influencerapi-09to.onrender.com/api/user';
+  private readonly baseUrl = `${environment.apiBaseUrl}/user`;
 
   constructor(private http: HttpClient) {}
 
   // ================= REGISTER =================
-  // register(data: RegisterRequest): Observable<any> {
-  //   return this.http.post(`${this.baseUrl}/register`, data);
-  // }
-
- register(data: FormData): Observable<any> {
-  return this.http.post(`${this.baseUrl}/Register`, data);
-}
+  register(data: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Register`, data);
+  }
 
   // ================= LOGIN =================
   login(data: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, data).pipe(
-      tap((res: LoginResponse) => {
-        this.setSession(res); // ✅ store token for interceptor
-      })
+    return this.http.post<LoginResponse>(
+      `${this.baseUrl}/login`,
+      data
+    ).pipe(
+      tap((res: LoginResponse) => this.setSession(res))
     );
   }
 
@@ -61,7 +58,10 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userType');
   }
 
   // ================= HELPERS =================

@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: 'influencer',
   webDir: 'www',
   server: {
-    cleartext: true
+    cleartext: true,
+    androidScheme: 'http'
   }
 };
 
