@@ -1,53 +1,211 @@
 <ion-header>
-  <ion-toolbar class="profile-header">
-    <ion-title>User Profile</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user-dashboard" text="Back"></ion-back-button>
+    </ion-buttons>
+    
+    <ion-title>
+      {{ isCurrentUser ? 'My Profile' : (user?.fullName || user?.userName || 'Profile') }}
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isCurrentUser" (click)="editProfile()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="isCurrentUser" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="!isCurrentUser" (click)="shareProfile()">
+        <ion-icon name="share-social-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="profile-bg" *ngIf="user">
+<ion-content class="profile-bg">
+  
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading profile...</p>
+  </div>
 
-  <div class="profile-container">
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading && user" class="profile-container">
 
+    <!-- Cover Image -->
+    <div class="cover-image">
+      <img src="https://picsum.photos/800/400?random={{userId}}" alt="Cover" />
+      <div class="cover-overlay"></div>
+    </div>
+
+    <!-- Profile Card -->
     <div class="profile-card">
 
-      <!-- Profile Image -->
-      <div class="image-wrapper">
-        <img 
-          [src]="'https://i.pravatar.cc/150?img=' + user.id" 
-          class="profile-img"
-        />
-
-        <!-- Online Dot -->
-        <span 
-          class="status-dot" 
-          [class.online]="user.isOnline">
-        </span>
+      <!-- Avatar -->
+      <div class="avatar-container">
+        <ion-avatar class="profile-avatar">
+          <img 
+            [src]="getUserImage(user)" 
+            [alt]="user.fullName || user.userName"
+            (error)="handleImageError($event)"
+          />
+        </ion-avatar>
+        
+        <div class="status-badge" [class.online]="user.isOnline">
+          <ion-icon [name]="user.isOnline ? 'checkmark-circle-outline' : 'time-outline'"></ion-icon>
+          {{ user.isOnline ? 'Online' : 'Offline' }}
+        </div>
       </div>
 
-      <!-- Name -->
-      <h2 class="name">
-        {{ user.fullName || 'No Name' }}
-      </h2>
+      <!-- User Info -->
+      <div class="user-info">
+        <div class="name-container">
+          <h1>{{ user.fullName || user.userName }}</h1>
+          <ion-badge *ngIf="isCurrentUser" color="success" class="verified-badge">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            Verified
+          </ion-badge>
+        </div>
+        
+        <p class="username">@{{ user.userName || 'user' }}</p>
+        
+        <div class="user-type-badge">
+          <ion-badge [color]="user.userTypeId === 3 ? 'primary' : 'secondary'">
+            <ion-icon [name]="user.userTypeId === 3 ? 'star-outline' : 'person-outline'"></ion-icon>
+            {{ user.userTypeId === 3 ? 'Influencer' : 'User' }}
+          </ion-badge>
+        </div>
 
-      <!-- Email -->
-      <p class="email">
-        {{ user.email }}
-      </p>
-
-      <!-- Info -->
-      <div class="info-box">
-        <p><span>Type:</span> {{ user.userTypeName }}</p>
-        <p>
-          <span>Status:</span> 
-          <span [class.online-text]="user.isOnline"
-                [class.offline-text]="!user.isOnline">
-            {{ user.isOnline ? 'Online' : 'Offline' }}
-          </span>
+        <p class="bio" *ngIf="user.bio || user.about">
+          {{ user.bio || user.about || 'No bio available' }}
         </p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-container">
+        <div class="stat-item">
+          <h3>{{ formatNumber(stats.followers) }}</h3>
+          <p>Followers</p>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <h3>{{ formatNumber(stats.following) }}</h3>
+          <p>Following</p>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <h3>{{ formatNumber(stats.posts) }}</h3>
+          <p>Posts</p>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <h3>{{ stats.engagement }}%</h3>
+          <p>Engagement</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <ion-button 
+          *ngIf="!isCurrentUser" 
+          expand="block" 
+          color="primary"
+          (click)="openChat()"
+          class="message-btn"
+        >
+          <ion-icon slot="start" name="chatbubble-outline"></ion-icon>
+          Send Message
+        </ion-button>
+        
+        <ion-button 
+          *ngIf="isCurrentUser" 
+          expand="block" 
+          color="primary"
+          (click)="editProfile()"
+          class="edit-btn"
+        >
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Edit Profile
+        </ion-button>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="info-section" *ngIf="user.email || user.phoneNumber || user.location">
+        <h4>
+          <ion-icon name="person-outline"></ion-icon>
+          Contact Information
+        </h4>
+        
+        <div class="info-item" *ngIf="user.email">
+          <ion-icon name="mail-outline" class="info-icon"></ion-icon>
+          <span>{{ user.email }}</span>
+        </div>
+        
+        <div class="info-item" *ngIf="user.phoneNumber">
+          <ion-icon name="call-outline" class="info-icon"></ion-icon>
+          <span>{{ user.phoneNumber }}</span>
+        </div>
+        
+        <div class="info-item" *ngIf="user.location">
+          <ion-icon name="location-outline" class="info-icon"></ion-icon>
+          <span>{{ user.location }}</span>
+        </div>
+        
+        <div class="info-item" *ngIf="user.website">
+          <ion-icon name="globe-outline" class="info-icon"></ion-icon>
+          <span>{{ user.website }}</span>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div class="info-section" *ngIf="user.socialLinks">
+        <h4>
+          <ion-icon name="share-social-outline"></ion-icon>
+          Social Media
+        </h4>
+        
+        <div class="social-links">
+          <div class="social-item" *ngFor="let link of socialLinks" [class.active]="link.url">
+            <ion-icon [name]="link.icon" class="social-icon"></ion-icon>
+            <span>{{ link.name }}</span>
+            <ion-badge *ngIf="link.url" color="success">Connected</ion-badge>
+            <ion-badge *ngIf="!link.url" color="medium">Not Connected</ion-badge>
+          </div>
+        </div>
+      </div>
+
+      <!-- Joined Date -->
+      <div class="joined-date">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>Joined {{ getJoinedDate() }}</span>
+      </div>
+
+      <!-- Follow Button -->
+      <div class="follow-section" *ngIf="!isCurrentUser">
+        <ion-button expand="block" color="primary" fill="outline" class="follow-btn">
+          <ion-icon slot="start" name="people-outline"></ion-icon>
+          Follow
+        </ion-button>
       </div>
 
     </div>
 
   </div>
+
+  <!-- Error State -->
+  <div *ngIf="!isLoading && !user" class="error-container">
+    <ion-icon name="person-outline" class="error-icon"></ion-icon>
+    <h3>User Not Found</h3>
+    <p>This user profile does not exist or has been removed.</p>
+    <ion-button (click)="goBack()" color="primary">Go Back</ion-button>
+  </div>
+
+  <!-- FAB for quick actions -->
+  <ion-fab *ngIf="!isCurrentUser && !isLoading" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openChat()">
+      <ion-icon name="chatbubble-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

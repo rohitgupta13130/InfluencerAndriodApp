@@ -1,46 +1,63 @@
 <ion-header>
   <ion-toolbar class="topbar nav-bar">
 
-    <!-- LEFT -->
+    <!-- LEFT SECTION -->
     <div class="left-section">
-      <ion-button fill="clear" (click)="toggleSidebar()">
+      <ion-button fill="clear" (click)="toggleSidebar()" aria-label="Toggle menu">
         <ion-icon name="menu-outline"></ion-icon>
       </ion-button>
     </div>
 
-    <!-- TITLE (CENTERED) -->
+    <!-- TITLE -->
     <ion-title>Influencer Connect</ion-title>
 
-    <!-- CENTER SEARCH -->
-    <div class="search-box">
+    <!-- SEARCH BOX - Hidden on mobile by default -->
+    <div class="search-box" [class.mobile-visible]="isMobileSearchVisible">
       <ion-icon name="search-outline"></ion-icon>
       <input 
         type="text" 
-        [(ngModel)]="searchText"
-        (input)="filterInfluencers()"
+        [(ngModel)]="searchText" 
+        (input)="filterInfluencers()" 
         placeholder="Search influencers..." 
+        aria-label="Search influencers"
       />
     </div>
 
-    <!-- RIGHT -->
+    <!-- RIGHT SECTION -->
     <div class="right-section">
-      <ion-button fill="clear" (click)="openNotifications()">
+      <!-- Mobile Search Toggle -->
+      <ion-button fill="clear" (click)="toggleSearch()" aria-label="Search" class="mobile-search-btn">
+        <ion-icon name="search-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button fill="clear" (click)="openNotifications()" aria-label="Notifications" class="notification-btn">
         <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge *ngIf="notificationCount > 0" class="notification-badge">
+          {{ notificationCount }}
+        </ion-badge>
       </ion-button>
 
-      <img [src]="userProfilePic" class="profile-pic"/>
+      <div class="user-info-container" (click)="currentUser && openProfile(currentUser)">
+        <ion-avatar class="profile-avatar">
+          <img 
+            [src]="userProfilePic" 
+            [alt]="currentUser?.fullName || currentUser?.userName || 'User'"
+            (error)="handleImageError($event)"
+          />
+        </ion-avatar>
+        <span class="user-name-text">
+          {{ currentUser?.fullName || currentUser?.userName || 'User' }}
+        </span>
+      </div>
 
-      <ion-button fill="clear" (click)="logout()">
-        <ion-icon name="log-out-outline"></ion-icon>
-        <span class="logout-text">Logout</span>
-      </ion-button>
+      <!-- REMOVED: Logout button from navbar -->
     </div>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="dashboard">
- 
+
   <!-- BACKDROP -->
   <div class="backdrop" *ngIf="!isSidebarHidden" (click)="toggleSidebar()"></div>
 
@@ -48,37 +65,181 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar" [class.hide]="isSidebarHidden">
-      <div class="menu-item" (click)="navigate('home')">🏠 Home</div>
-      <div class="menu-item" (click)="navigate('explore')">🔍 Explore</div>
-      <div class="menu-item" (click)="navigate('messages')">💬 Messages</div>
-      <div class="menu-item">❤️ Saved</div>
-      <div class="menu-item">⚙️ Settings</div>
+      
+      <!-- Sidebar Header -->
+      <div class="sidebar-header">
+        <div class="sidebar-user">
+          <ion-avatar class="sidebar-avatar">
+            <img 
+              [src]="userProfilePic" 
+              [alt]="currentUser?.fullName || currentUser?.userName || 'User'"
+              (error)="handleImageError($event)"
+            />
+          </ion-avatar>
+          <div class="sidebar-user-info">
+            <h4>{{ currentUser?.fullName || currentUser?.userName || 'User' }}</h4>
+            <p>{{ getUserRoleDisplay() }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu Items -->
+      <div class="sidebar-menu">
+        <div 
+          class="menu-item" 
+          [class.active]="activeMenu === 'home'"
+          (click)="navigate('home')"
+        >
+          <ion-icon name="home-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Dashboard</span>
+        </div>
+
+        <div 
+          class="menu-item" 
+          [class.active]="activeMenu === 'explore'"
+          (click)="navigate('explore')"
+        >
+          <ion-icon name="compass-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Explore</span>
+        </div>
+
+        <div 
+          class="menu-item" 
+          [class.active]="activeMenu === 'messages'"
+          (click)="navigate('messages')"
+        >
+          <ion-icon name="chatbubble-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Messages</span>
+          <ion-badge class="menu-badge" *ngIf="messageCount > 0">
+            {{ messageCount }}
+          </ion-badge>
+        </div>
+
+        <div 
+          class="menu-item" 
+          [class.active]="activeMenu === 'saved'"
+          (click)="navigate('saved')"
+        >
+          <ion-icon name="bookmark-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Saved</span>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div 
+          class="menu-item" 
+          [class.active]="activeMenu === 'profile'"
+          (click)="navigate('profile')"
+        >
+          <ion-icon name="person-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Profile</span>
+        </div>
+
+        <div 
+          class="menu-item" 
+          [class.active]="activeMenu === 'settings'"
+          (click)="navigate('settings')"
+        >
+          <ion-icon name="settings-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Settings</span>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer with Logout -->
+      <div class="sidebar-footer">
+        <div class="menu-item" (click)="logout()">
+          <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
+          <span class="menu-label">Logout</span>
+        </div>
+      </div>
+
     </div>
 
-    <!-- MAIN -->
+    <!-- MAIN CONTENT -->
     <div class="main">
-      <h2>Explore Influencers</h2>
+      <div class="page-header">
+        <h2>Explore Influencers</h2>
+        <p class="subtitle">Connect with top influencers for your campaigns</p>
+      </div>
 
-      <div class="grid">
+      <!-- LOADING STATE -->
+      <div *ngIf="loading" class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Loading influencers...</p>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div *ngIf="error && !loading" class="error-state">
+        <ion-icon name="alert-circle-outline" class="error-icon"></ion-icon>
+        <h3>{{ error }}</h3>
+        <ion-button (click)="loadUsers()" color="primary">Retry</ion-button>
+      </div>
+
+      <!-- INFLUENCER GRID -->
+      <div class="grid" *ngIf="!loading && !error">
         <div class="card" *ngFor="let user of filteredUsers">
 
-          <img [src]="getUserImage(user)" />
+          <!-- Profile Image -->
+          <div class="card-image-container">
+            <img 
+              [src]="getUserImage(user)" 
+              [alt]="user.fullName || user.userName || 'User'"
+              (error)="handleImageError($event, user)"
+              class="card-avatar"
+            />
+            <div class="status-indicator" [class.online]="user.isOnline"></div>
+          </div>
 
-          <h3>{{ user.fullName || user.userName }}</h3>
+          <!-- User Info -->
+          <h3 class="user-name">{{ user.fullName || user.userName || 'Unknown User' }}</h3>
+          
+          <div class="user-details">
+            <p class="category">
+              <ion-icon name="person-outline"></ion-icon>
+              {{ user.category || user.userTypeName || 'Influencer' }}
+            </p>
+            <p class="followers">
+              <ion-icon name="people-outline"></ion-icon>
+              {{ formatNumber(user.followers || 120000) }} followers
+            </p>
+          </div>
 
-          <p>Category: Lifestyle</p>
-          <p>Followers: {{ formatNumber(user.followers || 120000) }}</p>
-
+          <!-- Actions -->
           <div class="actions">
-            <ion-button size="small" (click)="openProfile(user)">
+            <ion-button 
+              size="small" 
+              color="primary" 
+              (click)="openProfile(user)"
+              expand="block"
+            >
+              <ion-icon slot="start" name="person-outline"></ion-icon>
               Profile
             </ion-button>
-            <ion-button size="small" color="success" (click)="openChat(user)">
+            <ion-button 
+              size="small" 
+              color="success" 
+              (click)="openChat(user)"
+              expand="block"
+            >
+              <ion-icon slot="start" name="chatbubble-outline"></ion-icon>
               Chat
             </ion-button>
           </div>
 
         </div>
+      </div>
+
+      <!-- EMPTY STATES -->
+      <div *ngIf="!loading && !error && filteredUsers.length === 0 && users.length > 0" class="empty-state">
+        <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+        <h3>No influencers found</h3>
+        <p>Try adjusting your search terms</p>
+      </div>
+
+      <div *ngIf="!loading && !error && users.length === 0" class="empty-state">
+        <ion-icon name="people-outline" class="empty-icon"></ion-icon>
+        <h3>No influencers available</h3>
+        <p>Check back later for new connections</p>
       </div>
 
     </div>

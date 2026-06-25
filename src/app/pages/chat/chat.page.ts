@@ -46,6 +46,7 @@ export class ChatPage implements OnInit, OnDestroy {
   selectedUser: any;
   avatar: string = '';          // your image (from dashboard)
   receiverAvatar: string = '';  // other user image
+  userRole: string = '';
 
   constructor(
     private chatService: ChatService,
@@ -55,6 +56,7 @@ export class ChatPage implements OnInit, OnDestroy {
 
  ngOnInit() {
   this.senderId = Number(localStorage.getItem('userId'));
+  this.userRole = localStorage.getItem('userRole') || 'user'; 
 
    this.avatar = localStorage.getItem('avatar') || 'https://i.pravatar.cc/100';
 
@@ -159,8 +161,17 @@ export class ChatPage implements OnInit, OnDestroy {
   }
 
   // 🔥 MINIMIZE (GO TO DASHBOARD)
-  minimizeChat() {
-    this.router.navigate(['/influencer-dashboard']);
+  // minimizeChat() {
+  //   this.router.navigate(['/influencer-dashboard']);
+  // }
+
+   minimizeChat() {
+    // Check user role and navigate accordingly
+    if (this.userRole === 'influencer') {
+      this.router.navigate(['/influencer-dashboard']);
+    } else {
+      this.router.navigate(['/user-dashboard']);
+    }
   }
 
   ngOnDestroy() {

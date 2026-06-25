@@ -70,60 +70,71 @@ export class LoginComponent {
     return this.loginForm.controls;
   }
 
- login() {
-  if (this.loginForm.invalid) {
-    this.loginForm.markAllAsTouched();
-    return;
+  login() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.loginError = '';
+
+    const payload = {
+      username: this.loginForm.value.username.trim(),
+      password: this.loginForm.value.password.trim()
+    };
+
+    this.authService.login(payload).subscribe({
+      next: (res: any) => {
+        this.isSubmitting = false;
+
+        console.log('✅ API Response:', res);
+
+        // ✅ Save all data to localStorage
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', res.userId.toString());
+        
+        // 🔥 API se 'userType' aa raha hai
+        const userType = res.userType; // 'User' ya 'Influencer'
+        localStorage.setItem('userRole', userType.toLowerCase()); // 'user' ya 'influencer'
+        localStorage.setItem('userType', userType);
+        
+        localStorage.setItem('userName', res.userName);
+        localStorage.setItem('fullName', res.fullName || res.userName || '');
+        localStorage.setItem('avatar', res.avatar || 'https://i.pravatar.cc/100');
+
+        console.log('✅ User Role Saved:', userType.toLowerCase());
+        console.log('✅ Token Saved:', res.token);
+
+        // ✅ Navigate based on userType
+        const userTypeLower = userType?.toLowerCase();
+
+        if (userTypeLower === 'influencer') {
+          this.router.navigate(['/influencer-dashboard'], { replaceUrl: true });
+        } else if (userTypeLower === 'admin') {
+          this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
+        } else {
+          this.router.navigate(['/user-dashboard'], { replaceUrl: true });
+        }
+      },
+
+      error: (err) => {
+        this.isSubmitting = false;
+
+        console.error('❌ Login Error:', err);
+
+        if (err?.error?.errors) {
+          const errors = err.error.errors;
+          this.loginError = Object.keys(errors)
+            .map(key => errors[key].join(', '))
+            .join(', ');
+        } else {
+          this.loginError = err?.error?.message || 'Invalid username or password';
+        }
+      }
+    });
   }
 
-  this.isSubmitting = true;
-  this.loginError = '';
-
-  const payload = {
-    username: this.loginForm.value.username.trim(),
-    password: this.loginForm.value.password.trim()
-  };
-
-  this.authService.login(payload).subscribe({
-    next: (res: any) => {
-      this.isSubmitting = false;
-
-      // ✅ Save data FIRST
-      localStorage.setItem('token', res.token);
-      localStorage.setItem('userId', res.userId.toString());
-      localStorage.setItem('userType', res.userType);
-      localStorage.setItem('userName', res.userName);
-
-      console.log('✅ Token Saved:', res.token);
-
-      // ✅ Navigate AFTER saving token
-      const userType = res.userType?.toLowerCase();
-
-      if (userType === 'influencer') {
-        this.router.navigate(['/influencer-dashboard'], { replaceUrl: true });
-      } else if (userType === 'admin') {
-        this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
-      } else {
-        this.router.navigate(['/user-dashboard'], { replaceUrl: true });
-      }
-    },
-
-    error: (err) => {
-      this.isSubmitting = false;
-
-      console.error('❌ Login Error:', err);
-
-      if (err?.error?.errors) {
-        const errors = err.error.errors;
-        this.loginError = Object.keys(errors)
-          .map(key => errors[key].join(', '))
-          .join(', ');
-      } else {
-        this.loginError = err?.error?.message || 'Invalid username or password';
-      }
-    }
-  });
-}
   togglePassword() {
     this.showPassword = !this.showPassword;
   }

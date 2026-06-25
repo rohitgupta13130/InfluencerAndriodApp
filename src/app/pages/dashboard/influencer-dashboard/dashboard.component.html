@@ -11,7 +11,7 @@
     <!-- TITLE (CENTERED) -->
     <ion-title>Influencer Connect</ion-title>
 
-    <!-- CENTER SEARCH (Optional - hidden if not needed) -->
+    <!-- CENTER SEARCH -->
     <div class="search-box" *ngIf="false">
       <ion-icon name="search-outline"></ion-icon>
       <input 
@@ -24,16 +24,23 @@
 
     <!-- RIGHT SECTION -->
     <div class="right-section">
-      <ion-button fill="clear" (click)="openNotifications()">
+      <ion-button fill="clear" (click)="openNotifications()" class="notification-btn">
         <ion-icon name="notifications-outline"></ion-icon>
+        <ion-badge *ngIf="notificationCount > 0" class="notification-badge">
+          {{ notificationCount }}
+        </ion-badge>
       </ion-button>
 
-      <img [src]="userProfilePic" class="profile-pic"/>
+      <!-- Profile Image with fallback -->
+      <img 
+        [src]="userProfilePic" 
+        class="profile-pic"
+        (error)="handleImageError($event)"
+        alt="Profile"
+        (click)="navigate('profile')"
+      />
 
-      <ion-button fill="clear" (click)="logout()">
-        <ion-icon name="log-out-outline"></ion-icon>
-        <span class="logout-text">Logout</span>
-      </ion-button>
+      <!-- REMOVED: Logout button from navbar -->
     </div>
 
   </ion-toolbar>
@@ -46,19 +53,105 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar" [class.hide]="isSidebarHidden">
-    <div class="menu-item" (click)="navigate('home')">🏠 Home</div>
-    <div class="menu-item" (click)="navigate('explore')">🔍 Explore</div>
-    <div class="menu-item" (click)="navigate('messages')">💬 Messages</div>
-    <div class="menu-item">❤️ Saved</div>
-    <div class="menu-item">⚙️ Settings</div>
+    
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <div class="sidebar-user">
+        <ion-avatar class="sidebar-avatar">
+          <img 
+            [src]="userProfilePic" 
+            [alt]="currentUser?.fullName || currentUser?.userName || 'User'"
+            (error)="handleImageError($event)"
+          />
+        </ion-avatar>
+        <div class="sidebar-user-info">
+          <h4>{{ currentUser?.fullName || currentUser?.userName || 'User' }}</h4>
+          <p>{{ currentUser?.userTypeName || 'User' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Items -->
+    <div class="sidebar-menu">
+      <div 
+        class="menu-item" 
+        [class.active]="activeMenu === 'home'"
+        (click)="navigate('home')"
+      >
+        <ion-icon name="home-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Dashboard</span>
+      </div>
+
+      <div 
+        class="menu-item" 
+        [class.active]="activeMenu === 'explore'"
+        (click)="navigate('explore')"
+      >
+        <ion-icon name="compass-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Explore</span>
+      </div>
+
+      <div 
+        class="menu-item" 
+        [class.active]="activeMenu === 'messages'"
+        (click)="navigate('messages')"
+      >
+        <ion-icon name="chatbubble-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Messages</span>
+        <ion-badge class="menu-badge">12</ion-badge>
+      </div>
+
+      <div 
+        class="menu-item" 
+        [class.active]="activeMenu === 'saved'"
+        (click)="navigate('saved')"
+      >
+        <ion-icon name="bookmark-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Saved</span>
+      </div>
+
+      <div class="menu-divider"></div>
+
+      <div 
+        class="menu-item" 
+        [class.active]="activeMenu === 'profile'"
+        (click)="navigate('profile')"
+      >
+        <ion-icon name="person-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Profile</span>
+      </div>
+
+      <div 
+        class="menu-item" 
+        [class.active]="activeMenu === 'settings'"
+        (click)="navigate('settings')"
+      >
+        <ion-icon name="settings-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Settings</span>
+      </div>
+    </div>
+
+    <!-- Sidebar Footer with Logout -->
+    <div class="sidebar-footer">
+      <div class="menu-item" (click)="logout()">
+        <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
+        <span class="menu-label">Logout</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- MAIN CONTENT -->
   <div class="main-content" [class.sidebar-hidden]="isSidebarHidden">
     
-    <!-- Welcome -->
+    <!-- Welcome with profile image -->
     <div class="welcome">
-      <img src="https://i.pravatar.cc/100" />
+      <img 
+        [src]="userProfilePic" 
+        (error)="handleImageError($event)"
+        alt="Profile"
+        class="welcome-avatar"
+      />
       <div>
         <h2>Welcome Back, {{ fullName || userName }} 👋</h2>
         <p>Your Performance Overview</p>
@@ -66,7 +159,7 @@
     </div>
 
     <!-- Loader -->
-    <div *ngIf="isLoading">
+    <div *ngIf="isLoading" class="loading-spinner">
       Loading dashboard...
     </div>
 
@@ -75,7 +168,7 @@
       <div class="cards">
         <div class="card gradient1">
           <h4>Earnings</h4>
-          <h2>₹{{ dashboardData?.earning }}</h2>
+          <h2>₹{{ dashboardData?.earning || 0 }}</h2>
           <p>Total</p>
         </div>
 
@@ -87,13 +180,13 @@
 
         <div class="card gradient3">
           <h4>Campaign</h4>
-          <h2>{{ dashboardData?.campaign }}</h2>
+          <h2>{{ dashboardData?.campaign || 0 }}</h2>
           <p>Active</p>
         </div>
 
         <div class="card gradient4">
           <h4>Engagement</h4>
-          <h2>{{ dashboardData?.engagement }}</h2>
+          <h2>{{ dashboardData?.engagement || '0%' }}</h2>
           <p>Status</p>
         </div>
       </div>
@@ -102,7 +195,7 @@
     <!-- Analytics -->
     <div class="analytics">
       <h3>Analytics</h3>
-      <img src="https://picsum.photos/600/200" class="chart"/>
+      <img src="https://picsum.photos/600/200" class="chart" alt="Analytics Chart"/>
       <div class="stats">
         <div>
           <h3>150K</h3>
@@ -124,14 +217,14 @@
       <div class="campaigns">
         <h3>Active Campaigns</h3>
         <div class="campaign-card">
-          <img src="https://picsum.photos/100/100?random=1" />
+          <img src="https://picsum.photos/100/100?random=1" alt="Campaign"/>
           <div>
             <h4>FitLife Promo</h4>
             <p>Due: Aug 12</p>
           </div>
         </div>
         <div class="campaign-card">
-          <img src="https://picsum.photos/100/100?random=2" />
+          <img src="https://picsum.photos/100/100?random=2" alt="Campaign"/>
           <div>
             <h4>GlamWear Collab</h4>
             <p>Due: Aug 20</p>
@@ -142,9 +235,9 @@
       <div class="brands">
         <h3>Top Brands</h3>
         <div class="brand-logos">
-          <img src="https://picsum.photos/80?random=3" />
-          <img src="https://picsum.photos/80?random=4" />
-          <img src="https://picsum.photos/80?random=5" />
+          <img src="https://picsum.photos/80?random=3" alt="Brand"/>
+          <img src="https://picsum.photos/80?random=4" alt="Brand"/>
+          <img src="https://picsum.photos/80?random=5" alt="Brand"/>
         </div>
       </div>
     </div>
@@ -156,10 +249,19 @@
 
     <ion-list *ngIf="isChatOpen" class="chat-list">
       <ion-item *ngFor="let user of users">
+        <ion-avatar slot="start">
+          <img 
+            [src]="getUserProfilePic(user)" 
+            (error)="handleImageError($event)"
+            alt="User avatar"
+          />
+        </ion-avatar>
         <ion-label>
-          {{ user.fullName || user.userName }}
+          <h2>{{ user.fullName || user.userName || user.email }}</h2>
+          <p *ngIf="user.isOnline" style="color: green;">● Online</p>
+          <p *ngIf="!user.isOnline" style="color: gray;">● Offline</p>
         </ion-label>
-        <ion-button (click)="openChat(user)">
+        <ion-button (click)="openChat(user)" fill="clear">
           Chat
         </ion-button>
       </ion-item>
