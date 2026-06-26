@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
- // apiBaseUrl: 'https://localhost:7117/api'
- apiBaseUrl: 'http://192.168.1.6:5286/api'
+  //apiBaseUrl: 'https://localhost:7117/api'
+   apiBaseUrl: 'https://influencerapi-09to.onrender.com/api'
 };
 
 /*

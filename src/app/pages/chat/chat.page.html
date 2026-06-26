@@ -1,44 +1,41 @@
 <ion-header>
   <ion-toolbar color="primary">
 
-    <!-- 🔥 MINIMIZE BUTTON -->
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="minimizeChat()">
-        💬
+        <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
 
-    <!-- <ion-title>Chat</ion-title> -->
-     <ion-title>
-
-  <div style="display:flex; align-items:center; gap:10px;">
-
-    <!-- 🔥 RECEIVER IMAGE -->
-    <img [src]="receiverAvatar" class="avatar"/>
-
-    <div>
-      {{ selectedFullName || selectedUserName || 'Chat' }}
-
-      <div style="font-size: 12px;">
-        <span *ngIf="selectedUser?.isOnline" style="color: lightgreen;">
-          Online
-        </span>
-        <span *ngIf="!selectedUser?.isOnline && selectedUser?.lastSeen">
-          Last seen {{ selectedUser.lastSeen | date:'shortTime':'Asia/Kolkata' }}
-        </span>
+    <ion-title>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <ion-avatar class="chat-avatar">
+          <img [src]="receiverAvatar" (error)="receiverAvatar = defaultAvatar"/>
+        </ion-avatar>
+        <div>
+          {{ selectedFullName || selectedUserName || 'Chat' }}
+          <div style="font-size: 12px; color: rgba(255,255,255,0.7);">
+            <span *ngIf="selectedUser?.isOnline">● Online</span>
+            <span *ngIf="!selectedUser?.isOnline && selectedUser?.lastSeen">
+              Last seen {{ selectedUser.lastSeen | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
       </div>
-    </div>
-
-  </div>
-
-</ion-title>
+    </ion-title>
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="chat-bg">
 
-  <div class="chat-container">
+  <div class="chat-container" #chatContainer>
+
+    <div *ngIf="messages.length === 0 && !isLoading" class="empty-state">
+      <ion-icon name="chatbubble-outline" class="empty-icon"></ion-icon>
+      <p>No messages yet</p>
+      <p class="empty-sub">Start a conversation with {{ selectedFullName || selectedUserName }}</p>
+    </div>
 
     <div *ngFor="let msg of messages"
          [ngClass]="msg.senderId == senderId ? 'my-msg' : 'other-msg'">
@@ -48,11 +45,9 @@
       </div>
 
       <div class="time">
-        {{ msg.createdDate | date:'shortTime' }}
-
-         <!-- ✅ SHOW STATUS -->
+        {{ msg.createdAt || msg.createdDate | date:'shortTime' }}
         <span *ngIf="msg.senderId == senderId">
-          • {{ msg.isRead ? 'Seen' : 'Sent' }}
+          • {{ msg.isRead ? '✓✓ Seen' : '✓ Sent' }}
         </span>
       </div>
 
@@ -63,19 +58,33 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-
+  <ion-toolbar class="chat-footer">
+    
     <ion-input
       [(ngModel)]="newMessage"
-      placeholder="Type message..."
-      (keydown.enter)="sendMessage()">
+      placeholder="Type a message..."
+      (keydown.enter)="sendMessage()"
+      class="chat-input"
+    >
     </ion-input>
 
     <ion-buttons slot="end">
-      <ion-button (click)="sendMessage()">
-        Send
+      <ion-button 
+        (click)="sendMessage()" 
+        [disabled]="!newMessage || !newMessage.trim() || isLoading" 
+        class="send-btn"
+      >
+        <ion-icon name="send-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
 
   </ion-toolbar>
 </ion-footer>
+
+<ion-toast
+  [isOpen]="showToast"
+  [message]="toastMessage"
+  [color]="toastColor"
+  [duration]="3000"
+  (didDismiss)="showToast = false"
+></ion-toast>

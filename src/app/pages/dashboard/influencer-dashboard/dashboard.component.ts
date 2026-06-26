@@ -17,7 +17,8 @@ import {
   IonItem,
   IonList,
   IonAvatar,
-  IonBadge
+  IonBadge,
+  IonToast
 } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -56,7 +57,8 @@ import {
     IonItem,
     IonList,
     IonAvatar,
-    IonBadge
+    IonBadge,
+    IonToast
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
@@ -77,6 +79,11 @@ export class DashboardComponent implements OnInit {
   defaultAvatar: string = 'assets/default-avatar.png';
   activeMenu: string = 'home';
   notificationCount: number = 3;
+  
+  // Toast properties
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastColor: string = 'success';
 
   constructor(
     private router: Router,
@@ -230,34 +237,80 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // ================= CHAT FUNCTIONALITY =================
   openChat(user: any) {
-    console.log('Clicked user:', user);
-    const id = user.id || user.userId;
-
+    console.log('🔵 ===== OPEN CHAT CALLED =====');
+    console.log('🔵 User object:', user);
+    
+    // Get the user ID
+    const id = user?.id || user?.userId;
+    
     if (!id) {
-      console.error('❌ ID missing:', user);
+      console.error('❌ ID missing for user:', user);
+      this.showToastMessage('User ID not found', 'danger');
       return;
     }
 
+    console.log('✅ User ID:', id);
+    console.log('✅ User Name:', user.fullName || user.userName);
+
+    // ✅ KEEP THE CHAT LIST OPEN - Don't close it here
+    // this.isChatOpen = false; // ❌ REMOVE THIS LINE
+    
+    // Store user data in localStorage as backup
+    try {
+      localStorage.setItem('chatUser', JSON.stringify(user));
+      console.log('✅ User saved to localStorage');
+    } catch (e) {
+      console.warn('Could not save user to localStorage:', e);
+    }
+    
+    // Navigate to chat page with user data
     this.router.navigate(['/chat', id], {
-      state: { user }
+      state: { 
+        user: user 
+      }
+    }).then(success => {
+      if (success) {
+        console.log('✅ Navigation successful to /chat/' + id);
+        this.showToastMessage('Opening chat...', 'success');
+        // Close chat list after successful navigation
+        this.isChatOpen = false;
+      } else {
+        console.error('❌ Navigation failed');
+        this.showToastMessage('Failed to open chat', 'danger');
+      }
+    }).catch(error => {
+      console.error('❌ Navigation error:', error);
+      this.showToastMessage('Error opening chat: ' + error.message, 'danger');
     });
+  }
+
+  // ================= TOAST FUNCTIONALITY =================
+  showToastMessage(message: string, color: string = 'success') {
+    this.toastMessage = message;
+    this.toastColor = color;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
   }
 
   loadUsers() {
     this.dashboardService.getUsers().subscribe({
       next: (res) => {
         this.users = res;
-        console.log('Users:', res);
+        console.log('✅ Users loaded:', this.users.length);
       },
       error: (err) => {
-        console.error('User load error:', err);
+        console.error('❌ User load error:', err);
       }
     });
   }
 
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
+    console.log('🔵 Chat list toggled:', this.isChatOpen);
   }
 
   toggleSidebar() {
