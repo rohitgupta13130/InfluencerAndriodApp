@@ -11,7 +11,7 @@
     <!-- TITLE -->
     <ion-title>Influencer Connect</ion-title>
 
-    <!-- SEARCH BOX - Hidden on mobile by default -->
+    <!-- SEARCH BOX -->
     <div class="search-box" [class.mobile-visible]="isMobileSearchVisible">
       <ion-icon name="search-outline"></ion-icon>
       <input 
@@ -49,8 +49,6 @@
           {{ currentUser?.fullName || currentUser?.userName || 'User' }}
         </span>
       </div>
-
-      <!-- REMOVED: Logout button from navbar -->
     </div>
 
   </ion-toolbar>
@@ -59,14 +57,12 @@
 <ion-content class="dashboard">
 
   <!-- BACKDROP -->
-  <div class="backdrop" *ngIf="!isSidebarHidden" (click)="toggleSidebar()"></div>
+  <div class="backdrop" *ngIf="!isSidebarHidden" (click)="closeSidebar()"></div>
 
   <div class="layout">
 
     <!-- SIDEBAR -->
     <div class="sidebar" [class.hide]="isSidebarHidden">
-      
-      <!-- Sidebar Header -->
       <div class="sidebar-header">
         <div class="sidebar-user">
           <ion-avatar class="sidebar-avatar">
@@ -83,7 +79,6 @@
         </div>
       </div>
 
-      <!-- Menu Items -->
       <div class="sidebar-menu">
         <div 
           class="menu-item" 
@@ -145,22 +140,29 @@
         </div>
       </div>
 
-      <!-- Sidebar Footer with Logout -->
       <div class="sidebar-footer">
         <div class="menu-item" (click)="logout()">
           <ion-icon name="log-out-outline" class="menu-icon"></ion-icon>
           <span class="menu-label">Logout</span>
         </div>
       </div>
-
     </div>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN CONTENT - Full Width -->
     <div class="main">
+      
       <div class="page-header">
         <h2>Explore Influencers</h2>
         <p class="subtitle">Connect with top influencers for your campaigns</p>
       </div>
+
+      <!-- RESULTS INFO -->
+      <!-- <div class="results-info" *ngIf="!loading && !error && filteredUsers.length > 0">
+        <span>
+          Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ getCurrentPageEnd() }} 
+          of {{ filteredUsers.length }} influencers
+        </span>
+      </div> -->
 
       <!-- LOADING STATE -->
       <div *ngIf="loading" class="loading-state">
@@ -177,9 +179,7 @@
 
       <!-- INFLUENCER GRID -->
       <div class="grid" *ngIf="!loading && !error">
-        <div class="card" *ngFor="let user of filteredUsers">
-
-          <!-- Profile Image -->
+        <div class="card" *ngFor="let user of paginatedUsers">
           <div class="card-image-container">
             <img 
               [src]="getUserImage(user)" 
@@ -190,7 +190,6 @@
             <div class="status-indicator" [class.online]="user.isOnline"></div>
           </div>
 
-          <!-- User Info -->
           <h3 class="user-name">{{ user.fullName || user.userName || 'Unknown User' }}</h3>
           
           <div class="user-details">
@@ -204,7 +203,6 @@
             </p>
           </div>
 
-          <!-- Actions -->
           <div class="actions">
             <ion-button 
               size="small" 
@@ -225,7 +223,6 @@
               Chat
             </ion-button>
           </div>
-
         </div>
       </div>
 
@@ -240,6 +237,60 @@
         <ion-icon name="people-outline" class="empty-icon"></ion-icon>
         <h3>No influencers available</h3>
         <p>Check back later for new connections</p>
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-container" *ngIf="!loading && !error && filteredUsers.length > 0">
+        <div class="pagination-controls">
+          <button 
+            class="pagination-btn" 
+            [disabled]="currentPage === 1"
+            (click)="goToPage(1)"
+          >
+            <ion-icon name="chevron-back-outline"></ion-icon>
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+          
+          <button 
+            class="pagination-btn" 
+            [disabled]="currentPage === 1"
+            (click)="previousPage()"
+          >
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+
+          <div class="page-numbers">
+            <button 
+              *ngFor="let page of getPageNumbers()"
+              class="page-btn"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          </div>
+
+          <button 
+            class="pagination-btn" 
+            [disabled]="currentPage === totalPages"
+            (click)="nextPage()"
+          >
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+
+          <button 
+            class="pagination-btn" 
+            [disabled]="currentPage === totalPages"
+            (click)="goToPage(totalPages)"
+          >
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="pagination-info">
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        </div>
       </div>
 
     </div>

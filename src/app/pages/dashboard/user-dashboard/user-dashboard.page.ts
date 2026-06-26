@@ -35,7 +35,9 @@ import {
   settingsOutline,
   chatbubbleEllipsesOutline,
   heartOutline,
-  trendingUpOutline
+  trendingUpOutline,
+  chevronBackOutline,
+  chevronForwardOutline
 } from 'ionicons/icons';
 
 @Component({
@@ -62,6 +64,7 @@ export class UserDashboardPage implements OnInit {
   // ================= STATE =================
   users: any[] = [];
   filteredUsers: any[] = [];
+  paginatedUsers: any[] = [];
   searchText: string = '';
   isSidebarHidden: boolean = true;
   loading: boolean = false;
@@ -71,12 +74,17 @@ export class UserDashboardPage implements OnInit {
   messageCount: number = 12;
   isMobile: boolean = false;
   isMobileSearchVisible: boolean = false;
-  
+
+  // ================= PAGINATION =================
+  currentPage: number = 1;
+  itemsPerPage: number = 10; // 10 items per page
+  totalPages: number = 1;
+
   // Current user data
   currentUser: any = null;
   userProfilePic: string = 'assets/default-avatar.png';
   defaultAvatar: string = 'assets/default-avatar.png';
-  
+
   // API Base URL for images
   private apiBaseUrl: string = environment.apiBaseUrl.replace('/api', '');
 
@@ -129,7 +137,9 @@ export class UserDashboardPage implements OnInit {
       settingsOutline,
       chatbubbleEllipsesOutline,
       heartOutline,
-      trendingUpOutline
+      trendingUpOutline,
+      chevronBackOutline,
+      chevronForwardOutline
     });
   }
 
@@ -139,7 +149,7 @@ export class UserDashboardPage implements OnInit {
       try {
         const decoded: any = jwtDecode(token);
         console.log('Decoded Token:', decoded);
-        
+
         this.currentUser = {
           fullName: decoded.FullName || decoded.fullName || '',
           userName: decoded.UserName || decoded.userName || '',
@@ -152,7 +162,7 @@ export class UserDashboardPage implements OnInit {
         if (this.currentUser.profileImage) {
           this.userProfilePic = this.getFullImageUrl(this.currentUser.profileImage);
         }
-        
+
         console.log('Current User:', this.currentUser);
       } catch (error) {
         console.error('Error decoding token:', error);
@@ -165,11 +175,11 @@ export class UserDashboardPage implements OnInit {
     if (!imagePath) {
       return this.defaultAvatar;
     }
-    
+
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return imagePath;
     }
-    
+
     const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
     return `${this.apiBaseUrl}/${cleanPath}`;
   }
@@ -196,11 +206,13 @@ export class UserDashboardPage implements OnInit {
   loadUsers(): void {
     this.loading = true;
     this.error = null;
-    
+
     this.dashboardService.getUsers().subscribe({
       next: (res: any[]) => {
         this.users = res || [];
         this.filteredUsers = [...this.users];
+        this.currentPage = 1;
+        this.updatePagination();
         this.loading = false;
         console.log('✅ Users loaded:', this.users.length);
       },
@@ -212,24 +224,110 @@ export class UserDashboardPage implements OnInit {
     });
   }
 
+  // ================= PAGINATION =================
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages || 1;
+    }
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = Math.min(startIndex + this.itemsPerPage, this.filteredUsers.length);
+    this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
+  }
+
+  getCurrentPageEnd(): number {
+    return Math.min(this.currentPage * this.itemsPerPage, this.filteredUsers.length);
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+    this.currentPage = page;
+    this.updatePagination();
+    // Scroll to top
+    const mainElement = document.querySelector('.main');
+    if (mainElement) {
+      mainElement.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.goToPage(this.currentPage - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const total = this.totalPages;
+    const current = this.currentPage;
+    
+    if (total <= 7) {
+      for (let i = 1; i <= total; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      
+      if (current > 3) {
+        pages.push(-1); // Ellipsis
+      }
+      
+      const start = Math.max(2, current - 1);
+      const end = Math.min(total - 1, current + 1);
+      
+      for (let i = start; i <= end; i++) {
+        if (i > 1 && i < total) {
+          pages.push(i);
+        }
+      }
+      
+      if (current < total - 2) {
+        pages.push(-1); // Ellipsis
+      }
+      
+      pages.push(total);
+    }
+    
+    return pages;
+  }
+
   // ================= SEARCH =================
   filterInfluencers(): void {
     const text = this.searchText?.toLowerCase().trim() || '';
     if (!text) {
       this.filteredUsers = [...this.users];
-      return;
+    } else {
+      this.filteredUsers = this.users.filter(user => {
+        const name = (user.fullName || user.userName || '').toLowerCase();
+        const email = (user.email || '').toLowerCase();
+        return name.includes(text) || email.includes(text);
+      });
     }
-    
-    this.filteredUsers = this.users.filter(user => {
-      const name = (user.fullName || user.userName || '').toLowerCase();
-      const email = (user.email || '').toLowerCase();
-      return name.includes(text) || email.includes(text);
-    });
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   // ================= UI ACTIONS =================
   toggleSidebar(): void {
     this.isSidebarHidden = !this.isSidebarHidden;
+    if (this.isMobile) {
+      document.body.style.overflow = this.isSidebarHidden ? '' : 'hidden';
+    }
+  }
+
+  closeSidebar(): void {
+    this.isSidebarHidden = true;
+    if (this.isMobile) {
+      document.body.style.overflow = '';
+    }
   }
 
   openNotifications(): void {
@@ -240,8 +338,8 @@ export class UserDashboardPage implements OnInit {
   // ================= NAVIGATION =================
   navigate(page: string): void {
     this.activeMenu = page;
-    this.isSidebarHidden = true;
-    
+    this.closeSidebar();
+
     const routes: any = {
       home: '/dashboard',
       explore: '/explore',
@@ -265,7 +363,7 @@ export class UserDashboardPage implements OnInit {
       console.error('❌ Missing user ID');
       return;
     }
-    this.isSidebarHidden = true;
+    this.closeSidebar();
     this.router.navigate(['/profile', id]);
   }
 
@@ -275,7 +373,7 @@ export class UserDashboardPage implements OnInit {
       console.error('❌ Missing user ID:', user);
       return;
     }
-    this.isSidebarHidden = true;
+    this.closeSidebar();
     this.router.navigate(['/chat', id], {
       state: { user }
     });
