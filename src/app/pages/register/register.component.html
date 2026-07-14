@@ -45,8 +45,8 @@
         </p>
 
         <!-- Photo Upload -->
-        <ion-item class="input-box file-item"
-          [class.invalid]="formSubmitted && !selectedFile">
+        <ion-item class="input-box file-item">
+          <!-- [class.invalid]="formSubmitted && !selectedFile"> -->
 
           <ion-icon name="image-outline" slot="start"></ion-icon>
 
@@ -57,9 +57,9 @@
           <input type="file" (change)="onFileSelected($event)" accept="image/*" />
         </ion-item>
 
-        <p class="error" *ngIf="formSubmitted && !selectedFile">
+        <!-- <p class="error" *ngIf="formSubmitted && !selectedFile">
           Photo is required
-        </p>
+        </p> -->
 
         <!-- Password -->
         <ion-item class="input-box"

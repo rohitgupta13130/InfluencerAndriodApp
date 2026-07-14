@@ -102,7 +102,12 @@ export class RegisterComponent {
   register() {
     this.formSubmitted = true;
 
-    if (this.registerForm.invalid || !this.selectedFile) {
+    // if (this.registerForm.invalid || !this.selectedFile) {
+    //   this.registerForm.markAllAsTouched();
+    //   return;
+    // }
+
+    if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
